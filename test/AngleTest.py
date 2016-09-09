@@ -110,7 +110,7 @@ class AngleTest(unittest.TestCase):
         angle.setDegreesAndMinutes("")
         self.assertEqual(angle.getDegrees(), 181)
 
-    def getString(self)
+    def getString(self):
         angle = Angle()
 
         angle.setDegrees(60.5)
@@ -119,7 +119,7 @@ class AngleTest(unittest.TestCase):
         angle.setDegrees(45.123)
         self.assertEqual("45d7.4", angle.getString())
 
-    def addTest(self)
+    def addTest(self):
         a = Angle()
         b = Angle()
 
@@ -149,7 +149,7 @@ class AngleTest(unittest.TestCase):
         a.add(b)
         self.assertEqual(a.getDegrees(), 2)
 
-    def subtractTest(self)
+    def subtractTest(self):
         a = Angle()
         b = Angle()
 
@@ -174,7 +174,7 @@ class AngleTest(unittest.TestCase):
         a.subtract(b)
         self.assertEqual(a.getDegrees(), 1)
 
-    def compareTest(self)
+    def compareTest(self):
         a = Angle()
         b = Angle()
 
