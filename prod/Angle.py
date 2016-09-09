@@ -1,24 +1,44 @@
 class Angle():
+    __period = 360
+    __minute = 60
+
     def __init__(self):
         self.angle = 0
-    
+
     def setDegrees(self, degrees):
-        pass
-    
+        if degrees < 0:
+            return self.setDegrees(degrees + self.__period)
+
+        self.angle = degrees % self.__period
+
+        return self.getDegrees()
+
     def setDegreesAndMinutes(self, degrees):
-        pass
-    
+        degrees = degrees.split("d", 1)
+
+    # degrees + minutes / minute
+        self.setDegrees(int(degrees[0]) + float(degrees[1]) / self.__minute)
+
+        return self.angle
+
     def add(self, angle):
-        pass
-    
+        return self.setDegrees(self.getDegrees() + angle.getDegrees())
+
     def subtract(self, angle):
-        pass
-    
+        return self.setDegrees(self.getDegrees() - angle.getDegrees())
+
     def compare(self, angle):
-        pass
-    
+        if self.getDegrees() > angle.getDegrees():
+            return 1
+        elif self.getDegrees() < angle.getDegrees():
+            return -1
+        else:
+            return 0
+
     def getString(self):
-        pass
-    
+        return (str(int(self.getDegrees())) +
+        "d" +
+        str(round((self.getDegrees() % 1) * self.__minute, 1)))
+
     def getDegrees(self):
-        pass
+        return self.angle

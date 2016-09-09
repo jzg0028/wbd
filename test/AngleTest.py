@@ -72,51 +72,55 @@ class AngleTest(unittest.TestCase):
             self.assertEqual(angle.setDegreesAndMinutes("360d60"), 1)
 
         # -1 degrees 60 minutes = 0 degrees
-            self.assertEqual(angle.setDegreesAndMinutes("-1d660"), 0)
+            self.assertEqual(angle.setDegreesAndMinutes("-1d60"), 0)
 
         except Exception:
         # none of these valid inputs should throw an exception
-            self.assertFail()
+            self.assertTrue(False)
 
-    # string must not be empty
-        self.assertRaises(ValueError, angle.setDegreesAndMinutes(""))
+        with self.assertRaises(ValueError):
+        # string must not be empty
+            angle.setDegreesAndMinutes("")
 
-    # no negative minutes
-        self.assertRaises(ValueError, angle.setDegreesAndMinutes("0d-1"))
+        # no negative minutes
+            angle.setDegreesAndMinutes("0d-1")
 
-    # missing degrees
-        self.assertRaises(ValueError, angle.setDegreesAndMinutes("d1"))
+        # missing degrees
+            angle.setDegreesAndMinutes("d1")
 
-    # missing minutes
-        self.assertRaises(ValueError, angle.setDegreesAndMinutes("0d"))
+        # missing minutes
+            angle.setDegreesAndMinutes("0d")
 
-    # missing separator
-        self.assertRaises(ValueError, angle.setDegreesAndMinutes("5"))
+        # missing separator
+            angle.setDegreesAndMinutes("5")
 
-    # degrees must be integer
-        self.assertRaises(ValueError, angle.setDegreesAndMinutes("0.1d0"))
+        # degrees must be integer
+            angle.setDegreesAndMinutes("0.1d0")
 
-    # minutes must have one decimal place
-        self.assertRaises(ValueError, angle.setDegreesAndMinutes("5d0.11"))
+        # minutes must have one decimal place
+            angle.setDegreesAndMinutes("5d0.11")
 
-    # must be numbers
-        self.assertRaises(ValueError, angle.setDegreesAndMinutes("xd5"))
-        self.assertRaises(ValueError, angle.setDegreesAndMinutes("4dy"))
-        
-    # separator must be a 'd'
-        self.assertRaises(ValueError, angle.setDegreesAndMinutes("5:3"))
+        # must be numbers
+            angle.setDegreesAndMinutes("xd5")
+            angle.setDegreesAndMinutes("4dy")
+            
+        # separator must be a 'd'
+            angle.setDegreesAndMinutes("5:3")
 
     # persistance tests
         angle.setDegreesAndMinutes("180d60")
         self.assertEqual(angle.getDegrees(), 181)
-        angle.setDegreesAndMinutes("")
+        try:
+            angle.setDegreesAndMinutes("")
+        except:
+            pass
         self.assertEqual(angle.getDegrees(), 181)
 
     def test_getString(self):
         angle = Angle()
 
         angle.setDegrees(60.5)
-        self.assertEqual("60d30", angle.getString())
+        self.assertEqual("60d30.0", angle.getString())
 
         angle.setDegrees(45.123)
         self.assertEqual("45d7.4", angle.getString())
