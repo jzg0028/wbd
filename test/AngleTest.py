@@ -1,7 +1,9 @@
 import unittest
 
+from Angle import Angle
+
 class AngleTest(unittest.TestCase):
-    def setDegreesTest(self):
+    def test_setDegrees(self):
         angle = Angle()
 
     # 360
@@ -40,13 +42,13 @@ class AngleTest(unittest.TestCase):
     # persistance test
         self.assertEqual(angle.getDegrees(), 359)
 
-    def getDegreesTest(self):
-        ange = Angle()
+    def test_getDegrees(self):
+        angle = Angle()
 
         angle.setDegrees(90)
         self.assertEqual(angle.getDegrees(), 90)
 
-    def setDegreesAndMinutes(self):
+    def test_setDegreesAndMinutes(self):
         angle = Angle()
 
     # valid inputs
@@ -110,7 +112,7 @@ class AngleTest(unittest.TestCase):
         angle.setDegreesAndMinutes("")
         self.assertEqual(angle.getDegrees(), 181)
 
-    def getString(self):
+    def test_getString(self):
         angle = Angle()
 
         angle.setDegrees(60.5)
@@ -119,7 +121,7 @@ class AngleTest(unittest.TestCase):
         angle.setDegrees(45.123)
         self.assertEqual("45d7.4", angle.getString())
 
-    def addTest(self):
+    def test_add(self):
         a = Angle()
         b = Angle()
 
@@ -149,7 +151,7 @@ class AngleTest(unittest.TestCase):
         a.add(b)
         self.assertEqual(a.getDegrees(), 2)
 
-    def subtractTest(self):
+    def test_subtract(self):
         a = Angle()
         b = Angle()
 
@@ -174,7 +176,7 @@ class AngleTest(unittest.TestCase):
         a.subtract(b)
         self.assertEqual(a.getDegrees(), 1)
 
-    def compareTest(self):
+    def test_compare(self):
         a = Angle()
         b = Angle()
 
