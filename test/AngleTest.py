@@ -54,61 +54,74 @@ class AngleTest(unittest.TestCase):
     # valid inputs
         try:
         # 60 minutes = 1 degrees
-            self.assertEqual(angle.setDegreesAndMinutes("0d60"), 1)
+            self.assertEqual(angle.setDegreesAndMinutes("0d60.0"), 1)
         
         # 0 minutes
-            self.assertEqual(angle.setDegreesAndMinutes("0d0"), 0)
+            self.assertEqual(angle.setDegreesAndMinutes("0d0.0"), 0)
 
         # 30 minutes = 0.5 degrees
-            self.assertEqual(angle.setDegreesAndMinutes("0d30"), 0.5)
+            self.assertEqual(angle.setDegreesAndMinutes("0d30.0"), 0.5)
 
         # 120 minutes = 2 degrees
-            self.assertEqual(angle.setDegreesAndMinutes("0d120"), 2)
+            self.assertEqual(angle.setDegreesAndMinutes("0d120.0"), 2)
 
         # 1 degrees 120 minutes = 3 degrees
-            self.assertEqual(angle.setDegreesAndMinutes("1d120"), 3)
+            self.assertEqual(angle.setDegreesAndMinutes("1d120.0"), 3)
 
         # 360 degrees 60 minutes = 1 degrees if 360 degrees = 0 degrees
-            self.assertEqual(angle.setDegreesAndMinutes("360d60"), 1)
+            self.assertEqual(angle.setDegreesAndMinutes("360d60.0"), 1)
 
         # -1 degrees 60 minutes = 0 degrees
-            self.assertEqual(angle.setDegreesAndMinutes("-1d60"), 0)
+            self.assertEqual(angle.setDegreesAndMinutes("-1d60.0"), 0)
 
         except Exception:
         # none of these valid inputs should throw an exception
             self.assertTrue(False)
 
+    # string must not be empty
         with self.assertRaises(ValueError):
-        # string must not be empty
             angle.setDegreesAndMinutes("")
 
-        # no negative minutes
-            angle.setDegreesAndMinutes("0d-1")
+    # no negative minutes
+        with self.assertRaises(ValueError):
+            angle.setDegreesAndMinutes("0d-1.0")
 
-        # missing degrees
-            angle.setDegreesAndMinutes("d1")
+    # missing degrees
+        with self.assertRaises(ValueError):
+            angle.setDegreesAndMinutes("d1.0")
 
-        # missing minutes
+    # missing minutes
+        with self.assertRaises(ValueError):
             angle.setDegreesAndMinutes("0d")
 
-        # missing separator
+    # missing separator
+        with self.assertRaises(ValueError):
             angle.setDegreesAndMinutes("5")
 
-        # degrees must be integer
+    # degrees must be integer
+        with self.assertRaises(ValueError):
             angle.setDegreesAndMinutes("0.1d0")
 
-        # minutes must have one decimal place
+    # minutes must have no more than one decimal place
+        with self.assertRaises(ValueError):
             angle.setDegreesAndMinutes("5d0.11")
 
-        # must be numbers
+    # minutes must have no less than one decimal place
+        with self.assertRaises(ValueError):
+            angle.setDegreesAndMinutes("5d1")
+
+    # must be numbers
+        with self.assertRaises(ValueError):
             angle.setDegreesAndMinutes("xd5")
+        with self.assertRaises(ValueError):
             angle.setDegreesAndMinutes("4dy")
             
-        # separator must be a 'd'
+    # separator must be a 'd'
+        with self.assertRaises(ValueError):
             angle.setDegreesAndMinutes("5:3")
 
     # persistance tests
-        angle.setDegreesAndMinutes("180d60")
+        angle.setDegreesAndMinutes("180d60.0")
         self.assertEqual(angle.getDegrees(), 181)
         try:
             angle.setDegreesAndMinutes("")
@@ -120,10 +133,19 @@ class AngleTest(unittest.TestCase):
         angle = Angle()
 
         angle.setDegrees(60.5)
-        self.assertEqual("60d30.0", angle.getString())
+        self.assertEqual(angle.getString(), "60d30.0")
 
         angle.setDegrees(45.123)
-        self.assertEqual("45d7.4", angle.getString())
+        self.assertEqual(angle.getString(), "45d7.4")
+
+    def test_getStringSetDegreesAndMinutesCommutative(self):
+        a = Angle()
+        b = Angle()
+
+        a.setDegreesAndMinutes("180d40.8")
+        b.setDegreesAndMinutes(a.getString())
+
+        self.assertEqual(b.getString(), "180d40.8")
 
     def test_add(self):
         a = Angle()

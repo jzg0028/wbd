@@ -14,10 +14,21 @@ class Angle():
         return self.getDegrees()
 
     def setDegreesAndMinutes(self, degrees):
-        degrees = degrees.split("d", 1)
+        degrees = degrees.split("d")
+
+        if len(degrees) != 2:
+            raise ValueError("missing separator")
+
+        minutes = degrees[1].split(".")
+        if len(minutes) != 2 or len(minutes[1]) > 1:
+            raise ValueError("invalid minute precision")
+
+        minutes = float(degrees[1])
+        if minutes < 0:
+            raise ValueError("minutes may not be negative")
 
     # degrees + minutes / minute
-        self.setDegrees(int(degrees[0]) + float(degrees[1]) / self.__minute)
+        self.setDegrees(int(degrees[0]) + minutes / self.__minute)
 
         return self.angle
 
