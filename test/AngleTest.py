@@ -1,3 +1,9 @@
+"""
+    September 10th 2016
+
+    author: Jesse Gamez
+"""
+
 import unittest
 
 from Angle import Angle
