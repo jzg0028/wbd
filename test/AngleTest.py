@@ -42,6 +42,12 @@ class AngleTest(unittest.TestCase):
     # persistance test
         self.assertEqual(angle.getDegrees(), 359)
 
+    # default value
+        self.assertEqual(angle.setDegrees(), 0)
+
+        with self.assertRaises(ValueError):
+            angle.setDegrees("abc")
+
     def test_getDegrees(self):
         angle = Angle()
 
@@ -115,7 +121,7 @@ class AngleTest(unittest.TestCase):
             angle.setDegreesAndMinutes("xd5")
         with self.assertRaises(ValueError):
             angle.setDegreesAndMinutes("4dy")
-            
+
     # separator must be a 'd'
         with self.assertRaises(ValueError):
             angle.setDegreesAndMinutes("5:3")
