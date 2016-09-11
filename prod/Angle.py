@@ -1,3 +1,9 @@
+"""
+    September 10th 2016
+
+    author: Jesse Gamez
+"""
+
 class Angle():
     __period = 360
     __minute = 60
