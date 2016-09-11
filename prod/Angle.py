@@ -5,7 +5,9 @@ class Angle():
     def __init__(self):
         self.angle = 0
 
-    def setDegrees(self, degrees):
+    def setDegrees(self, degrees = 0):
+        degrees = float(degrees)
+        
         if degrees < 0:
             return self.setDegrees(degrees + self.__period)
 
