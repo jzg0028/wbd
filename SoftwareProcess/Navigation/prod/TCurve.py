@@ -1,3 +1,9 @@
+"""
+    September 25th 2016
+
+    author: Jesse Gamez
+"""
+
 import math
 class TCurve(object):
 
@@ -62,10 +68,29 @@ class TCurve(object):
         return result
     
     def integrate(self, t, n, f):
-        pass
-        
-        
-    
-        
-            
-        
+    # tollerance for margin of error
+        epsilon = 0.0001
+        old = 0
+        simpson = epsilon
+    # initial number of sections
+        s = 8
+
+    # while within reasonable margin of error
+        while(abs((simpson - old) / simpson) > epsilon):
+            old = simpson
+        # width of each section
+            w = t / s
+
+        # first section has no coefficient
+            simpson = f(0, n)
+            i = s - 1
+            while i >= 0:
+                simpson += f(t - i * w, n) * (4 if i & 1 == 1 else 2)
+                i -= 1
+        # add last section, and multiply by w/3
+            simpson = (simpson + f(t, n)) * w / 3
+
+        # double number of sections for greater precision
+            s *= 2
+
+        return simpson
