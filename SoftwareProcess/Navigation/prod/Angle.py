@@ -4,7 +4,7 @@
     author: Jesse Gamez
 """
 
-class Angle():
+class Angle(object):
     __period = 360
     __minute = 60
 

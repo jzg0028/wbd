@@ -4,7 +4,7 @@
     author: Jesse Gamez
 """
 
-class Fix():
+class Fix(object):
 
     def __init__(self, name):
         pass
