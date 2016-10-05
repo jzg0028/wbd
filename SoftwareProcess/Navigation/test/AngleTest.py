@@ -6,7 +6,7 @@
 
 import unittest
 
-from Angle import Angle
+from Navigation.prod.Angle import Angle
 
 class AngleTest(unittest.TestCase):
     def test_setDegrees(self):
