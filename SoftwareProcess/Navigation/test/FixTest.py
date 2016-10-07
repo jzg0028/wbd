@@ -9,7 +9,9 @@ class FixTest(unittest.TestCase):
 
     def setUp(self):
         self.files = []
-        self.regex = re.compile("LOG: \d{4}(-\d{2}){2} (\d{2}:?){3}\.\d{6}:")
+        self.regex = re.compile (
+            "LOG:\t\d{4}(-\d{2}){2} (\d{2}:?){3}-(\d{2}:?){2}:\t"
+        )
 
     def tearDown(self):
         for f in self.files:
