@@ -22,11 +22,13 @@ class Fix(object):
     def setSightingFile(self, name):
         if name.count(".xml") == 0 or name[-5:] == ".xml":
             raise ValueError
-
-    # must store name instead of FD to avoid zombie FD
         self.sightings = name
-        f = open(name, "a")
-        f.close()
+
+        sightings = open(name, "a")
+        log = open(self.log, "a")
+        log.write(Logger.logify("Start of sighting file: " + name))
+        log.close()
+        sightings.close()
 
     def getSightings():
         pass
