@@ -41,6 +41,14 @@ class FixTest(unittest.TestCase):
         except (FileNotFoundError, ValueError) as e:
             self.fail(e)
 
+    def testConstructorState(self):
+        Fix()
+        self.files.append(open("log.txt", "r"))
+
+    # The timestamp is unknown, but the line should always end with this.
+        expected = "Start of log\n"
+        self.assertEqual(expected, self.files[-1].readline()[-len(expected):])
+
 # instructions are unclear
 # append "Start of sighting file: f.xml" to log
     def testSetSightingFileInvalid(self):
