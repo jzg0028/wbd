@@ -13,7 +13,7 @@ class FixTest(unittest.TestCase):
             f.close()
             os.remove(f.name)
 
-    def testConstructor(self):
+    def testConstructorInvalid(self):
     # these are invalid names
         with self.assertRaises(ValueError):
             Fix("file.not-a-txt")
@@ -26,6 +26,7 @@ class FixTest(unittest.TestCase):
         with self.assertRaises(FileNotFoundError):
             self.files.append(open(".txt", "r"))
 
+    def testConstructorValid(self):
     # default file name
         try:
             Fix()
@@ -42,7 +43,7 @@ class FixTest(unittest.TestCase):
 
 # instructions are unclear
 # append "Start of sighting file: f.xml" to log
-    def testSetSightingFile(self):
+    def testSetSightingFileInvalid(self):
     # these are invalid names
         with self.assertRaises(ValueError):
             Fix("file.not-an-xml")
@@ -51,9 +52,9 @@ class FixTest(unittest.TestCase):
 
     # these files should not have been created
         with self.assertRaises(FileNotFoundError):
-            self.files.append(open("file.not-an-xml", "r"))
+            self.files[-1] = open("file.not-an-xml", "r")
         with self.assertRaises(FileNotFoundError):
-            self.files.append(open(".xml", "r"))
+            self.files[-1] = open(".xml", "r")
 
     def testGetSightings(self):
         pass
