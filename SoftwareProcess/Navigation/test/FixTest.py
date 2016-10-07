@@ -71,7 +71,8 @@ class FixTest(unittest.TestCase):
     # log file should still only have "Start of log" in it
         self.files.append(open("log.txt", "r"))
         expected = "Start of log\n"
-        self.assertEqual(expected, self.files[-1].readline()[-len(expected):])
+        actual = self.files[-1].readlines()[-1]
+        self.assertEqual(expected, actual[-len(expected):])
 
     def testSetSightingFileValid(self):
         fix = Fix()
@@ -81,4 +82,5 @@ class FixTest(unittest.TestCase):
 
         self.files.append(open("log.txt", "r"))
         expected = "Start of sighting file: file.xml\n"
-        self.assertEqual(expected, self.files[-1].readline()[-len(expected):])
+        actual = self.files[-1].readlines()[-1]
+        self.assertEqual(expected, actual[-len(expected):])
