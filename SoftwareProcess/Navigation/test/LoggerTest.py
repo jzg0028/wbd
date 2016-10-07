@@ -7,7 +7,7 @@ class LoggerTest(unittest.TestCase):
 
     def testLogifyTimestamp(self):
         regex = re.compile(
-            "LOG:\t\d{4}(-\d{2}){2} (\d{2}:?){3}-(\d{2}:?){2}:\t"
+            "LOG:\t\d{4}(-\d{2}){2} (\d{2}:?){3}-|\+(\d{2}:?){2}:\t"
         )
         actual = Logger.logify("foobar")
         self.assertTrue(regex.match(actual), "bad timestamp: " + actual)
