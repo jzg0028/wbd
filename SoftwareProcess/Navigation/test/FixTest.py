@@ -73,5 +73,12 @@ class FixTest(unittest.TestCase):
         expected = "Start of log\n"
         self.assertEqual(expected, self.files[-1].readline()[-len(expected):])
 
-    def testGetSightings(self):
-        pass
+    def testSetSightingFileValid(self):
+        fix = Fix()
+
+        fix.setSightingFile("file.xml")
+        self.files.append(open("file.xml", "r"))
+
+        self.files.append(open("log.txt", "r"))
+        expected = "Start of sighting file: file.xml\n"
+        self.assertEqual(expected, self.files[-1].readline()[-len(expected):])
