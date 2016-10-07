@@ -60,17 +60,18 @@ class FixTest(unittest.TestCase):
 # instructions are unclear
 # append "Start of sighting file: f.xml" to log
     def testSetSightingFileInvalid(self):
-    # these are invalid names
-        with self.assertRaises(ValueError):
-            Fix("file.not-an-xml")
-        with self.assertRaises(ValueError):
-            Fix(".xml")
+        fix = Fix()
 
-    # these files should not have been created
-        with self.assertRaises(FileNotFoundError):
-            self.files[-1] = open("file.not-an-xml", "r")
-        with self.assertRaises(FileNotFoundError):
-            self.files[-1] = open(".xml", "r")
+    # these aren't valid
+        with self.assertRaises(ValueError):
+            fix.setSightingFile("file.not-an-xml")
+        with self.assertRaises(ValueError):
+            fix.setSightingFile(".xml")
+
+    # log file should still only have "Start of log" in it
+        self.files.append(open("log.txt", "r"))
+        expected = "Start of log\n"
+        self.assertEqual(expected, self.files[-1].readline()[-len(expected):])
 
     def testGetSightings(self):
         pass
