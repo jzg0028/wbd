@@ -14,6 +14,7 @@ class Fix(object):
     # must store name instead of FD to avoid zombie FD
         self.log = name
         f = open(name, "a")
+        f.write("Start of log\n")
         f.close()
 
     def setSightingFile(self, name):
