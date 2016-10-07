@@ -1,5 +1,7 @@
 import unittest
 import os
+import re
+
 from Navigation.prod.Fix import Fix
 
 # Note: ISO 8601 UTC date/time
@@ -7,6 +9,7 @@ class FixTest(unittest.TestCase):
 
     def setUp(self):
         self.files = []
+        self.regex = re.compile("LOG: \d{4}(-\d{2}){2} (\d{2}:?){3}\.\d{6}:")
 
     def tearDown(self):
         for f in self.files:
@@ -45,9 +48,14 @@ class FixTest(unittest.TestCase):
         Fix()
         self.files.append(open("log.txt", "r"))
 
+        actual = self.files[-1].readline()
+
     # The timestamp is unknown, but the line should always end with this.
         expected = "Start of log\n"
-        self.assertEqual(expected, self.files[-1].readline()[-len(expected):])
+        self.assertEqual(expected, actual[-len(expected):])
+
+    # The line should start with a timestamp like this regex
+        self.assertTrue(self.regex.match(actual), "bad timestamp: " + actual)
 
 # instructions are unclear
 # append "Start of sighting file: f.xml" to log
