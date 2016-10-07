@@ -5,6 +5,8 @@
     author: Jesse Gamez
 """
 
+import Navigation.prod.util.Logger as Logger
+
 class Fix(object):
 
     def __init__(self, name = "log.txt"):
@@ -14,7 +16,7 @@ class Fix(object):
     # must store name instead of FD to avoid zombie FD
         self.log = name
         f = open(name, "a")
-        f.write("Start of log\n")
+        f.write(Logger.logify("Start of log"))
         f.close()
 
     def setSightingFile(self, name):
