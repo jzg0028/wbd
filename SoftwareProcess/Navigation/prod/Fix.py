@@ -24,7 +24,7 @@ class Fix(object):
             raise ValueError
         self.sightings = name
 
-        sightings = open(name, "a")
+        sightings = open(name, "r")
         log = open(self.log, "a")
         log.write(Logger.logify("Start of sighting file: " + name))
         log.close()
