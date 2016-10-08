@@ -9,6 +9,7 @@ class FixTest(unittest.TestCase):
 
     def setUp(self):
         self.files = []
+        self.resources = []
         self.regex = re.compile (
             "LOG:\t\d{4}(-\d{2}){2} (\d{2}:?){3}-|\+(\d{2}:?){2}:\t"
         )
@@ -17,6 +18,8 @@ class FixTest(unittest.TestCase):
         for f in self.files:
             f.close()
             os.remove(f.name)
+        for f in self.resources:
+            f.close()
 
     def testConstructorInvalid(self):
     # these are invalid names
@@ -59,7 +62,6 @@ class FixTest(unittest.TestCase):
     # The line should start with a timestamp like this regex
         self.assertTrue(self.regex.match(actual), "bad timestamp: " + actual)
 
-# instructions are unclear
 # append "Start of sighting file: f.xml" to log
     def testSetSightingFileInvalid(self):
         fix = Fix()
@@ -69,6 +71,8 @@ class FixTest(unittest.TestCase):
             fix.setSightingFile("file.not-an-xml")
         with self.assertRaises(ValueError):
             fix.setSightingFile(".xml")
+        with self.assertRaises(ValueError):
+            fix.setSightingFile("fake.xml")
 
     # log file should still only have "Start of log" in it
         self.files.append(open("log.txt", "r"))
@@ -78,11 +82,13 @@ class FixTest(unittest.TestCase):
 
     def testSetSightingFileValid(self):
         fix = Fix()
+    # this should be valid
+        fname = "SoftwareProcess/Navigation/resources/sightings.xml"
 
-        fix.setSightingFile("file.xml")
-        self.files.append(open("file.xml", "r"))
+        fix.setSightingFile(fname)
+        self.resources.append(open(fname, "r"))
 
         self.files.append(open("log.txt", "r"))
-        expected = "Start of sighting file: file.xml\n"
+        expected = "Start of sighting file: " + fname + "\n"
         actual = self.files[-1].readlines()[-1]
         self.assertEqual(expected, actual[-len(expected):])
