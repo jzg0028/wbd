@@ -29,9 +29,9 @@ class FixTest(unittest.TestCase):
             Fix(".txt")
 
     # these files should not have been created
-        with self.assertRaises(FileNotFoundError):
+        with self.assertRaises(IOError):
             self.files.append(open("file.not-a-txt", "r"))
-        with self.assertRaises(FileNotFoundError):
+        with self.assertRaises(IOError):
             self.files.append(open(".txt", "r"))
 
     def testConstructorValid(self):
@@ -39,14 +39,14 @@ class FixTest(unittest.TestCase):
         try:
             Fix()
             self.files.append(open("log.txt", "r"))
-        except (FileNotFoundError, ValueError) as e:
+        except (IOError, ValueError) as e:
             self.fail(e)
 
     # valid file name
         try:
             Fix("foo.txt")
             self.files.append(open("foo.txt", "r"))
-        except (FileNotFoundError, ValueError) as e:
+        except (IOError, ValueError) as e:
             self.fail(e)
 
     def testConstructorState(self):
