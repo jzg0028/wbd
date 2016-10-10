@@ -15,20 +15,25 @@ class Fix(object):
 
     # must store name instead of FD to avoid zombie FD
         self.log = name
-        f = open(name, "a")
-        f.write(Logger.logify("Start of log"))
-        f.close()
+
+        try:
+            with open(name, "a") as log:
+                log.write(Logger.logify("Start of log"))
+        except(IOError):
+            raise ValueError
 
     def setSightingFile(self, name):
         if name.count(".xml") == 0 or name[-5:] == ".xml":
             raise ValueError
+
+    # store name instead of FD to avoid zombie FD
         self.sightings = name
 
-        sightings = open(name, "r")
-        log = open(self.log, "a")
-        log.write(Logger.logify("Start of sighting file: " + name))
-        log.close()
-        sightings.close()
+        try:
+            with open(name, "r") as sightings, open(self.log, "a") as log:
+                log.write(Logger.logify("Start of sighting file: " + name))
+        except(IOError):
+            raise ValueError
 
     def getSightings():
         pass
