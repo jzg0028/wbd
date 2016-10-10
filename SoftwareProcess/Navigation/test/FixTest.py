@@ -8,6 +8,7 @@ from Navigation.prod.Fix import Fix
 class FixTest(unittest.TestCase):
 
     def setUp(self):
+        self.fname = "SoftwareProcess/Navigation/resources/sightings.xml"
         self.files = []
         self.resources = []
         self.regex = re.compile (
@@ -85,10 +86,32 @@ class FixTest(unittest.TestCase):
     # this should be valid
         fname = "SoftwareProcess/Navigation/resources/sightings.xml"
 
-        fix.setSightingFile(fname)
-        self.resources.append(open(fname, "r"))
+        fix.setSightingFile(self.fname)
+        self.resources.append(open(self.fname, "r"))
 
         self.files.append(open("log.txt", "r"))
-        expected = "Start of sighting file: " + fname + "\n"
+        expected = "Start of sighting file: " + self.fname + "\n"
         actual = self.files[-1].readlines()[-1]
         self.assertEqual(expected, actual[-len(expected):])
+
+    def testGetSightingsUnset(self):
+        fix = Fix()
+        self.files.append(open("log.txt", "r"))
+    # undefined behavior if sighting file hasn't been set yet
+        with self.assertRaises(Exception):
+            fix.getSightings()
+
+    def testGetSightingsSet(self):
+        fix = Fix()
+        fix.setSightingFile(self.fname)
+        self.files.append(open("log.txt", "r"))
+        
+        fix.getSightings()
+
+    # should end with this line
+        expected = "End of sighting file: " + self.fname + "\n"
+        lines = self.files[-1].readlines()
+        actual = lines[-1]
+        self.assertEqual(expected, actual[-len(expected):])
+    # should be 5 lines in the log
+        self.assertEqual(5, len(lines))
