@@ -56,9 +56,9 @@ class Angle(object):
             return 0
 
     def getString(self):
-        return (str(int(self.getDegrees())) +
-        "d" +
-        str(round((self.getDegrees() % 1) * self.__minute, 1)))
+        return ("%dd%.1f"
+            % (int(self.getDegrees()),
+            (self.getDegrees() % 1) * self.__minute))
 
     def getDegrees(self):
         return self.angle
