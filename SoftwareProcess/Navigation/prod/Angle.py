@@ -8,12 +8,12 @@ class Angle(object):
     __period = 360
     __minute = 60
 
-    def __init__(self):
-        self.angle = 0
+    def __init__(self, degrees = 0):
+        self.setDegrees(degrees)
 
     def setDegrees(self, degrees = 0):
         degrees = float(degrees)
-        
+
         if degrees < 0:
             return self.setDegrees(degrees + self.__period)
 
@@ -35,10 +35,11 @@ class Angle(object):
         if minutes < 0:
             raise ValueError("minutes may not be negative")
 
-    # degrees + minutes / minute
-        self.setDegrees(int(degrees[0]) + minutes / self.__minute)
+        if degrees[0][0] == '-':
+            minutes *= -1
 
-        return self.angle
+    # degrees + minutes / minute
+        return self.setDegrees(int(degrees[0]) + minutes / self.__minute)
 
     def add(self, angle):
         return self.setDegrees(self.getDegrees() + angle.getDegrees())
