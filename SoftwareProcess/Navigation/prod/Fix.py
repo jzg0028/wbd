@@ -5,7 +5,10 @@
     author: Jesse Gamez
 """
 
+import xml.etree.ElementTree as ET
+
 import Navigation.prod.util.Logger as Logger
+import Navigation.prod.util.Sighting as Sighting
 
 class Fix(object):
 
@@ -35,5 +38,13 @@ class Fix(object):
         except(IOError):
             raise ValueError
 
-    def getSightings():
-        pass
+    def getSightings(self):
+    # any errors at this point are undefined
+        with open(self.log, "a") as log:
+            for sighting in Sighting.parse(self.sightings):
+                log.write(Logger.logify(str(sighting)))
+            log.write (
+                Logger.logify (
+                    "End of sighting file: " + self.sightings
+                )
+            )
