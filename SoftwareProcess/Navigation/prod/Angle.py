@@ -3,6 +3,7 @@
 
     author: Jesse Gamez
 """
+import re
 
 class Angle(object):
     __period = 360
@@ -12,42 +13,68 @@ class Angle(object):
         self.setDegrees(degrees)
 
     def setDegrees(self, degrees = 0):
-        degrees = float(degrees)
+        try:
+            degrees = float(degrees)
+        except:
+            raise ValueError (
+                self.__class__.__name__ + "."
+                + self.setDegrees.__name__
+                + ":  doesn't look like a float"
+            )
 
+    # recursively add 360 to the degrees until its positive
         if degrees < 0:
             return self.setDegrees(degrees + self.__period)
 
+    # set the positive degrees as % 360
         self.angle = degrees % self.__period
 
         return self.getDegrees()
 
     def setDegreesAndMinutes(self, degrees):
-        degrees = degrees.split("d")
+        match = re.compile("^(-?)(\d{1,3})d(\d{1,2}\.\d)$").match(degrees)
 
-        if len(degrees) != 2:
-            raise ValueError("missing separator")
+    # if the regex found a match in degrees
+        if(match):
+        # return degrees + minutes / minute
+            return self.setDegrees (
+                int(match.group(1) + match.group(2))
+                + float(match.group(1) + match.group(3))
+                / self.__minute
+            )
 
-        minutes = degrees[1].split(".")
-        if len(minutes) != 2 or len(minutes[1]) > 1:
-            raise ValueError("invalid minute precision")
-
-        minutes = float(degrees[1])
-        if minutes < 0:
-            raise ValueError("minutes may not be negative")
-
-        if degrees[0][0] == '-':
-            minutes *= -1
-
-    # degrees + minutes / minute
-        return self.setDegrees(int(degrees[0]) + minutes / self.__minute)
+    # otherwise, raise an error
+        raise ValueError (
+            self.__class__.__name__ + "."
+            + self.setDegreesAndMinutes.__name__
+            + ":  must be string with this format: -?##0d#0.0"
+        )
 
     def add(self, angle):
+        if type(angle) is not Angle:
+            raise ValueError (
+                self.__class__.__name__ + "."
+                + self.add.__name__
+                + ":  not an Angle"
+            )
         return self.setDegrees(self.getDegrees() + angle.getDegrees())
 
     def subtract(self, angle):
+        if type(angle) is not Angle:
+            raise ValueError (
+                self.__class__.__name__ + "."
+                + self.subtract.__name__
+                + ":  not an Angle"
+            )
         return self.setDegrees(self.getDegrees() - angle.getDegrees())
 
     def compare(self, angle):
+        if type(angle) is not Angle:
+            raise ValueError (
+                self.__class__.__name__ + "."
+                + self.compare.__name__
+                + ":  not an Angle"
+            )
         if self.getDegrees() > angle.getDegrees():
             return 1
         elif self.getDegrees() < angle.getDegrees():
@@ -56,8 +83,7 @@ class Angle(object):
             return 0
 
     def getString(self):
-        return ("%dd%.1f"
-            % (int(self.getDegrees()),
+        return ("%dd%.1f" % (int(self.getDegrees()),
             (self.getDegrees() % 1) * self.__minute))
 
     def getDegrees(self):
