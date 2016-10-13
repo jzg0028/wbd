@@ -48,3 +48,4 @@ class Fix(object):
                     "End of sighting file: " + self.sightings
                 )
             )
+            return ("0d0.0", "0d0.0")
