@@ -12,7 +12,7 @@ class FixTest(unittest.TestCase):
         self.files = []
         self.resources = []
         self.regex = re.compile (
-            "LOG:\t\d{4}(-\d{2}){2} (\d{2}:?){3}-|\+(\d{2}:?){2}:\t"
+            "^LOG:\t\d{4}-\d\d-\d\d (?:\d\d:?){3}[-+]\d\d:\d\d:\t(.*)\n$"
         )
 
     def tearDown(self):
@@ -54,14 +54,13 @@ class FixTest(unittest.TestCase):
         Fix()
         self.files.append(open("log.txt", "r"))
 
-        actual = self.files[-1].readline()
+        lines = self.files[-1].readlines()
+        match = self.regex.match(lines[-1])
+        expected = "Start of log"
 
-    # The timestamp is unknown, but the line should always end with this.
-        expected = "Start of log\n"
-        self.assertEqual(expected, actual[-len(expected):])
-
-    # The line should start with a timestamp like this regex
-        self.assertTrue(self.regex.match(actual), "bad timestamp: " + actual)
+        self.assertEqual(1, len(lines))
+        self.assertTrue(match, "bad timestamp: " + lines[-1])
+        self.assertEqual(expected, match.group(1))
 
 # append "Start of sighting file: f.xml" to log
     def testSetSightingFileInvalid(self):
@@ -77,9 +76,14 @@ class FixTest(unittest.TestCase):
 
     # log file should still only have "Start of log" in it
         self.files.append(open("log.txt", "r"))
-        expected = "Start of log\n"
-        actual = self.files[-1].readlines()[-1]
-        self.assertEqual(expected, actual[-len(expected):])
+
+        lines = self.files[-1].readlines()
+        match = self.regex.match(lines[-1])
+        expected = "Start of log"
+
+        self.assertEqual(1, len(lines))
+        self.assertTrue(match, "bad timestamp: " + lines[-1])
+        self.assertEqual(expected, match.group(1))
 
     def testSetSightingFileValid(self):
         fix = Fix()
@@ -90,9 +94,14 @@ class FixTest(unittest.TestCase):
         self.resources.append(open(self.fname, "r"))
 
         self.files.append(open("log.txt", "r"))
-        expected = "Start of sighting file: " + self.fname + "\n"
-        actual = self.files[-1].readlines()[-1]
-        self.assertEqual(expected, actual[-len(expected):])
+
+        lines = self.files[-1].readlines()
+        match = self.regex.match(lines[-1])
+        expected = "Start of sighting file: " + self.fname
+
+        self.assertEqual(2, len(lines))
+        self.assertTrue(match, "bad timestamp: " + lines[-1])
+        self.assertEqual(expected, match.group(1))
 
     def testGetSightingsUnset(self):
         fix = Fix()
@@ -104,14 +113,15 @@ class FixTest(unittest.TestCase):
     def testGetSightingsSet(self):
         fix = Fix()
         fix.setSightingFile(self.fname)
-        self.files.append(open("log.txt", "r"))
         
         self.assertEqual(("0d0.0", "0d0.0"), fix.getSightings())
 
-    # should end with this line
-        expected = "End of sighting file: " + self.fname + "\n"
+        self.files.append(open("log.txt", "r"))
+
         lines = self.files[-1].readlines()
-        actual = lines[-1]
-        self.assertEqual(expected, actual[-len(expected):])
-    # should be 5 lines in the log
+        match = self.regex.match(lines[-1])
+        expected = "End of sighting file: " + self.fname
+
         self.assertEqual(5, len(lines))
+        self.assertTrue(match, "bad timestamp: " + lines[-1])
+        self.assertEqual(expected, match.group(1))
