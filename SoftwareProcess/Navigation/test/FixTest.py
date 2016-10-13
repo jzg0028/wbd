@@ -106,7 +106,7 @@ class FixTest(unittest.TestCase):
         fix.setSightingFile(self.fname)
         self.files.append(open("log.txt", "r"))
         
-        fix.getSightings()
+        self.assertEqual(("0d0.0", "0d0.0"), fix.getSightings())
 
     # should end with this line
         expected = "End of sighting file: " + self.fname + "\n"
