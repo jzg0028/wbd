@@ -12,19 +12,19 @@ import Navigation.prod.util.Sighting as Sighting
 
 class Fix(object):
 
-    def __init__(self, name = "log.txt"):
-        if name.count(".txt") == 0 or name[-5:] == ".txt":
+    def __init__(self, logFile = "log.txt"):
+        if logFile.count(".txt") == 0 or logFile[-5:] == ".txt":
             raise ValueError (
                 self.__class__.__name__ + "."
                 + self.__init__.__name__
-                + ": invalid filename"
+                + ": invalid filelogFile"
             )
 
-    # must store name instead of FD to avoid zombie FD
-        self.log = name
+    # must store logFile instead of FD to avoid zombie FD
+        self.log = logFile
 
         try:
-            with open(name, "a") as log:
+            with open(logFile, "a") as log:
                 log.write(Logger.logify("Start of log"))
         except(IOError):
             raise ValueError (
@@ -33,8 +33,8 @@ class Fix(object):
                 + ": invalid filename"
             )
 
-    def setSightingFile(self, name):
-        if name.count(".xml") == 0 or name[-5:] == ".xml":
+    def setSightingFile(self, sightingFile):
+        if sightingFile.count(".xml") == 0 or sightingFile[-5:] == ".xml":
             raise ValueError (
                 self.__class__.__name__ + "."
                 + self.setSightingFile.__name__
@@ -42,11 +42,13 @@ class Fix(object):
             )
 
     # store name instead of FD to avoid zombie FD
-        self.sightings = name
+        self.sightings = sightingFile
 
         try:
-            with open(name, "r") as sightings, open(self.log, "a") as log:
-                log.write(Logger.logify("Start of sighting file: " + name))
+            with open(sightingFile, "r") as sitngs, open(self.log, "a") as log:
+                log.write (
+                    Logger.logify("Start of sighting file: " + sightingFile)
+                )
         except(IOError):
             raise ValueError (
                 self.__class__.__name__ + "."
