@@ -45,11 +45,11 @@ class Sighting(object):
         return match.group(1)
 
     def geographicLongitude(self):
-        sha, gha = (Angle(),)*2
-        sha.setDegreesAndMinutes(self.star.sha)
+        hda, gha = (Angle(),)*2
+        hda.setDegreesAndMinutes(self.star.hda)
         gha.setDegreesAndMinutes(self.aries.gha)
 
-        return sha.add(gha)
+        return hda.add(gha)
 
     def __str__(self):
         return (self.arr["body"]

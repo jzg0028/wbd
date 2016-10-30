@@ -4,7 +4,9 @@ class Aries(object):
         line = self.search(fname, date, hour)
 
         if line == None:
-            raise ValueError("observed date too late or early")
+            raise ValueError (
+                "date or hour too early: date: " + date + "hour: " + hour
+            )
 
         self.gha = line[2][0:-1]
 
