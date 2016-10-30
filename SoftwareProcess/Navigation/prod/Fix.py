@@ -25,7 +25,7 @@ class Fix(object):
 
         try:
             with open(logFile, "a") as log:
-                log.write(Logger.logify("Start of log"))
+                log.write(Logger.logify("Log file:\t" + logFile))
         except(IOError):
             raise ValueError (
                 self.__class__.__name__ + "."
@@ -47,7 +47,7 @@ class Fix(object):
         try:
             with open(sightingFile, "r") as sitngs, open(self.log, "a") as log:
                 log.write (
-                    Logger.logify("Start of sighting file: " + sightingFile)
+                    Logger.logify("Sighting file:\t" + sightingFile)
                 )
         except(IOError):
             raise ValueError (
@@ -70,7 +70,7 @@ class Fix(object):
                 log.write(Logger.logify(str(sighting)))
             log.write (
                 Logger.logify (
-                    "End of sighting file: " + self.sightings
+                    "End of sighting file " + self.sightings
                 )
             )
             return ("0d0.0", "0d0.0")
