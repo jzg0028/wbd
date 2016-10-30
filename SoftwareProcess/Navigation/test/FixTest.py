@@ -141,3 +141,15 @@ class FixTest(unittest.TestCase):
             fix.setAriesFile(".txt")
         with self.assertRaises(ValueError):
             fix.setAriesFile("fake.txt")
+
+    def testSetStarFileInvalid(self):
+        fix = Fix()
+        self.files.append(open("log.txt", "r"))
+
+    # these are invalid names
+        with self.assertRaises(ValueError):
+            fix.setStarFile("file.not-a-txt")
+        with self.assertRaises(ValueError):
+            fix.setStarFile(".txt")
+        with self.assertRaises(ValueError):
+            fix.setStarFile("fake.txt")
