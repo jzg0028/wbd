@@ -113,10 +113,15 @@ class FixTest(unittest.TestCase):
             fix.getSightings()
 
     def testGetSightingsSet(self):
-        fname = "SoftwareProcess/Navigation/resources/sightings.xml"
-        fix = Fix()
-        fix.setSightingFile(fname)
+        root = "SoftwareProcess/Navigation/resources/"
+        sighting = root + "sightings.xml"
+        star = root + "stars.txt"
+        aries = root + "aries.txt"
 
+        fix = Fix()
+        fix.setSightingFile(sighting)
+        fix.setStarFile(star)
+        fix.setAriesFile(aries)
         
         self.assertEqual(("0d0.0", "0d0.0"), fix.getSightings())
 
@@ -124,13 +129,11 @@ class FixTest(unittest.TestCase):
 
         lines = self.files[-1].readlines()
         match = self.regex.match(lines[-1])
-        expected = re.compile (
-            "^End of sighting file (/[^/]+)+/" + fname + "$"
-        )
+        expected = "Sighting errors:\t1"
 
-        self.assertEqual(5, len(lines))
+        self.assertEqual(7, len(lines))
         self.assertTrue(match, "bad timestamp: " + lines[-1])
-        self.assertTrue(expected.match(match.group(1)))
+        self.assertEqual(expected, match.group(1))
 
     def testSetAriesFileInvalid(self):
         fix = Fix()
