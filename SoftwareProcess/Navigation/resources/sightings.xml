@@ -1,19 +1,19 @@
 <fix>
 	<sighting>
-		<body>Aldebran</body>
-		<date>2016-03-01</date>
-		<time>23:40:01</time>
-		<observation>15d4.9</observation>
+		<body>Pollux</body>
+		<date>2016-04-14</date>
+		<time>23:50:14</time>
+		<observation>015d04.9</observation>
 		<height>6.0</height>
 		<temperature>72</temperature>
 		<pressure>1010</pressure>
 		<horizon>Artificial</horizon>
 	</sighting>
 	<sighting>
-		<body>Peacock</body>
-		<date>2016-03-02</date>
-		<time>00:05:05</time>
-		<observation>45d15.2</observation>
+		<body>Sirius</body>
+		<date>2017-04-17</date>
+		<time>09:30:30</time>
+		<observation>045d15.2</observation>
 		<height>6.0</height>
 		<temperature>71</temperature>
 		<pressure>1010</pressure>
