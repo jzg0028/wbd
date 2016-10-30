@@ -9,6 +9,9 @@ import xml.etree.ElementTree as ET
 
 import Navigation.prod.util.Logger as Logger
 import Navigation.prod.util.Sighting as Sighting
+from os import path
+import re
+
 
 class Fix(object):
 
@@ -76,4 +79,10 @@ class Fix(object):
             return ("0d0.0", "0d0.0")
 
     def setAriesFile(self, ariesFile):
-        pass
+        ariesFile = path.abspath(path.normpath(ariesFile))
+        if re.compile("\w+\.txt$").match(ariesFile) == None:
+            raise ValueError (
+                self.__class__.__name__ + "."
+                + self.setAriesFile.__name__
+                + ": invalid file name"
+            )
