@@ -17,7 +17,8 @@ class Sighting(object):
         date = self.date()
         hour = self.hour()
         self.star = Star(starFile, self.arr["body"], date)
-        self.aries = Aries(ariesFile, date, hour)
+        self.aries1 = Aries(ariesFile, date, str(hour))
+        self.aries2 = Aries(ariesFile, date, str((hour + 1) % 24))
 
     def adjustedAltitude(self):
         altitude = Angle().setDegreesAndMinutes(self.arr["observation"])
@@ -40,16 +41,38 @@ class Sighting(object):
         return match.group(2) + "/" + match.group(3) + "/" + match.group(1)
 
     def hour(self):
-        match = re.compile("^0?([1-9]?\d):\d\d:\d\d$").match(self.arr["time"])
+        match = re.compile("^(\d\d):\d\d:\d\d$").match(self.arr["time"])
 
-        return match.group(1)
+        return int(match.group(1))
+
+    def seconds(self):
+        match = re.compile("^\d\d:(\d\d):(\d\d)").match(self.arr["time"])
+        
+        return (int(match.group(1)) * 60) + int(match.group(2))
 
     def geographicLongitude(self):
-        hda, gha = (Angle(),)*2
+        hda = Angle()
         hda.setDegreesAndMinutes(self.star.hda)
-        gha.setDegreesAndMinutes(self.aries.gha)
+        hda.add(self.ghaAries())
+        return hda.getString()
 
-        return hda.add(gha)
+    def ghaAries(self):
+        gha1 = Angle()
+        gha1.setDegreesAndMinutes(self.aries1.gha)
+
+        gha1.add(Angle(self.subAries().getDegrees() * self.seconds() / 3600))
+
+        return gha1
+
+    def subAries(self):
+        gha1 = Angle()
+        gha2 = Angle()
+        gha1.setDegreesAndMinutes(self.aries1.gha)
+        gha2.setDegreesAndMinutes(self.aries2.gha)
+
+        gha2.subtract(gha1)
+
+        return gha2
 
     def __str__(self):
         return (self.arr["body"]
@@ -57,4 +80,4 @@ class Sighting(object):
             + "\t" + self.arr["time"]
             + "\t" + Angle(self.adjustedAltitude()).getString()
             + "\t" + self.geographicLatitude()
-            + "\t" + Angle(self.geographicLongitude()).getString())
+            + "\t" + self.geographicLongitude())
