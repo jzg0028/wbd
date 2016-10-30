@@ -18,7 +18,7 @@ class SightingTest(unittest.TestCase):
         self.assertEqual("04/17/17", arr[1].date())
 
         self.assertEqual (
-            "Pollux\t2017-04-14\t23:50:14\t15d01.5\t27d59.1\t84d33.4",
+            "Pollux\t2017-04-14\t23:50:14\t15d1.5\t27d59.1\t84d33.4",
             str(arr[0])
         )
         self.assertEqual (
