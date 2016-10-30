@@ -56,11 +56,11 @@ class FixTest(unittest.TestCase):
 
         lines = self.files[-1].readlines()
         match = self.regex.match(lines[-1])
-        expected = "Log file:\tlog.txt"
+        expected = re.compile("^Log file:\t(/[^/]+)+/log\.txt$")
 
         self.assertEqual(1, len(lines))
         self.assertTrue(match, "bad timestamp: " + lines[-1])
-        self.assertEqual(expected, match.group(1))
+        self.assertTrue(expected.match(match.group(1)))
 
 # append "Start of sighting file: f.xml" to log
     def testSetSightingFileInvalid(self):
@@ -79,11 +79,11 @@ class FixTest(unittest.TestCase):
 
         lines = self.files[-1].readlines()
         match = self.regex.match(lines[-1])
-        expected = "Log file:\tlog.txt"
+        expected = re.compile("^Log file:\t(/[^/]+)+/log\.txt$")
 
         self.assertEqual(1, len(lines))
         self.assertTrue(match, "bad timestamp: " + lines[-1])
-        self.assertEqual(expected, match.group(1))
+        self.assertTrue(expected.match(match.group(1)))
 
     def testSetSightingFileValid(self):
         fix = Fix()
@@ -97,11 +97,13 @@ class FixTest(unittest.TestCase):
 
         lines = self.files[-1].readlines()
         match = self.regex.match(lines[-1])
-        expected = "Sighting file:\t" + self.fname
+        expected = re.compile (
+            "^Sighting file:\t(/[^/]+)+/" + self.fname + "$"
+        )
 
         self.assertEqual(2, len(lines))
         self.assertTrue(match, "bad timestamp: " + lines[-1])
-        self.assertEqual(expected, match.group(1))
+        self.assertTrue(expected.match(match.group(1)))
 
     def testGetSightingsUnset(self):
         fix = Fix()
@@ -120,11 +122,13 @@ class FixTest(unittest.TestCase):
 
         lines = self.files[-1].readlines()
         match = self.regex.match(lines[-1])
-        expected = "End of sighting file " + self.fname
+        expected = re.compile (
+            "^End of sighting file (/[^/]+)+/" + self.fname + "$"
+        )
 
         self.assertEqual(5, len(lines))
         self.assertTrue(match, "bad timestamp: " + lines[-1])
-        self.assertEqual(expected, match.group(1))
+        self.assertTrue(expected.match(match.group(1)))
 
     def testSetAriesFileInvalid(self):
         fix = Fix()
