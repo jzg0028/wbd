@@ -125,3 +125,15 @@ class FixTest(unittest.TestCase):
         self.assertEqual(5, len(lines))
         self.assertTrue(match, "bad timestamp: " + lines[-1])
         self.assertEqual(expected, match.group(1))
+
+    def testSetAriesFileInvalid(self):
+        fix = Fix()
+        self.files.append(open("log.txt", "r"))
+
+    # these are invalid names
+        with self.assertRaises(ValueError):
+            fix.setAriesFile("file.not-a-txt")
+        with self.assertRaises(ValueError):
+            fix.setAriesFile(".txt")
+        with self.assertRaises(ValueError):
+            fix.setAriesFile("fake.txt")

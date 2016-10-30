@@ -74,3 +74,6 @@ class Fix(object):
                 )
             )
             return ("0d0.0", "0d0.0")
+
+    def setAriesFile(self, ariesFile):
+        pass
