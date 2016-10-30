@@ -114,7 +114,7 @@ class Fix(object):
         try:
             with open(starFile, "r") as aries, open(self.log, "a") as log:
                 log.write (
-                    Logger.logify("Star file:\t" + ariesFile)
+                    Logger.logify("Star file:\t" + starFile)
                 )
                 self.star = starFile
         except(IOError):
