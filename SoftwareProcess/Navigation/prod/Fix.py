@@ -8,7 +8,7 @@
 import xml.etree.ElementTree as ET
 
 import Navigation.prod.util.Logger as Logger
-import Navigation.prod.util.Sighting as Sighting
+from Navigation.prod.util.Sighting import Sighting
 from os import path
 import re
 
@@ -71,11 +71,20 @@ class Fix(object):
 
     # any errors at this point are undefined
         with open(self.log, "a") as log:
-            for sighting in Sighting.parse(self.sightings):
-                log.write(Logger.logify(str(sighting)))
+            errors = 0
+            for sighting in ET.parse(self.sightings).getroot():
+                try:
+                    log.write (
+                        Logger.logify (
+                            str(Sighting(sighting, self.star, self.aries))
+                        )
+                    )
+                except:
+                    errors += 1
+
             log.write (
                 Logger.logify (
-                    "End of sighting file " + self.sightings
+                    "Sighting errors:\t" + str(errors)
                 )
             )
             return ("0d0.0", "0d0.0")
