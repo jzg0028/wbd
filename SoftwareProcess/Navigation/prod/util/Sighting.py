@@ -56,5 +56,5 @@ class Sighting(object):
             + "\t" + self.arr["date"]
             + "\t" + self.arr["time"]
             + "\t" + Angle(self.adjustedAltitude()).getString()
-            + "\t" + Angle(self.geographicLatitude()).getString()
+            + "\t" + self.geographicLatitude()
             + "\t" + Angle(self.geographicLongitude()).getString())
