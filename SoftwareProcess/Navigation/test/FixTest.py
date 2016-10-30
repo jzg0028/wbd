@@ -97,7 +97,7 @@ class FixTest(unittest.TestCase):
 
         lines = self.files[-1].readlines()
         match = self.regex.match(lines[-1])
-        expected = "Sighting file: " + self.fname
+        expected = "Sighting file:\t" + self.fname
 
         self.assertEqual(2, len(lines))
         self.assertTrue(match, "bad timestamp: " + lines[-1])
