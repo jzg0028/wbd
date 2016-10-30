@@ -90,15 +90,15 @@ class FixTest(unittest.TestCase):
     # this should be valid
         fname = "SoftwareProcess/Navigation/resources/sightings.xml"
 
-        fix.setSightingFile(self.fname)
-        self.resources.append(open(self.fname, "r"))
+        fix.setSightingFile(fname)
+        self.resources.append(open(fname, "r"))
 
         self.files.append(open("log.txt", "r"))
 
         lines = self.files[-1].readlines()
         match = self.regex.match(lines[-1])
         expected = re.compile (
-            "^Sighting file:\t(/[^/]+)+/" + self.fname + "$"
+            "^Sighting file:\t(/[^/]+)+/" + fname + "$"
         )
 
         self.assertEqual(2, len(lines))
@@ -113,8 +113,10 @@ class FixTest(unittest.TestCase):
             fix.getSightings()
 
     def testGetSightingsSet(self):
+        fname = "SoftwareProcess/Navigation/resources/sightings.xml"
         fix = Fix()
-        fix.setSightingFile(self.fname)
+        fix.setSightingFile(fname)
+
         
         self.assertEqual(("0d0.0", "0d0.0"), fix.getSightings())
 
@@ -123,7 +125,7 @@ class FixTest(unittest.TestCase):
         lines = self.files[-1].readlines()
         match = self.regex.match(lines[-1])
         expected = re.compile (
-            "^End of sighting file (/[^/]+)+/" + self.fname + "$"
+            "^End of sighting file (/[^/]+)+/" + fname + "$"
         )
 
         self.assertEqual(5, len(lines))
@@ -142,6 +144,26 @@ class FixTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             fix.setAriesFile("fake.txt")
 
+    def testSetAriesFileValid(self):
+        fix = Fix()
+    # this should be valid
+        fname = "SoftwareProcess/Navigation/resources/aries.txt"
+
+        fix.setAriesFile(fname)
+        self.resources.append(open(fname, "r"))
+
+        self.files.append(open("log.txt", "r"))
+
+        lines = self.files[-1].readlines()
+        match = self.regex.match(lines[-1])
+        expected = re.compile (
+            "^Aries file:\t(/[^/]+)+/" + fname + "$"
+        )
+
+        self.assertEqual(2, len(lines))
+        self.assertTrue(match, "bad timestamp: " + lines[-1])
+        self.assertTrue(expected.match(match.group(1)))
+
     def testSetStarFileInvalid(self):
         fix = Fix()
         self.files.append(open("log.txt", "r"))
@@ -153,3 +175,23 @@ class FixTest(unittest.TestCase):
             fix.setStarFile(".txt")
         with self.assertRaises(ValueError):
             fix.setStarFile("fake.txt")
+
+    def testSetStarFileValid(self):
+        fix = Fix()
+    # this should be valid
+        fname = "SoftwareProcess/Navigation/resources/stars.txt"
+
+        fix.setStarFile(fname)
+        self.resources.append(open(fname, "r"))
+
+        self.files.append(open("log.txt", "r"))
+
+        lines = self.files[-1].readlines()
+        match = self.regex.match(lines[-1])
+        expected = re.compile (
+            "^Star file:\t(/[^/]+)+/" + fname + "$"
+        )
+
+        self.assertEqual(2, len(lines))
+        self.assertTrue(match, "bad timestamp: " + lines[-1])
+        self.assertTrue(expected.match(match.group(1)))
