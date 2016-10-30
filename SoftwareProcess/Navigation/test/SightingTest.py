@@ -11,17 +11,11 @@ class SightingTest(unittest.TestCase):
         starFile = root + "stars.txt"
         arr = Sighting.parse(sightingFile, starFile, ariesFile)
 
-        self.assertEqual("23", arr[0].hour())
-        self.assertEqual("9", arr[1].hour())
-
-        self.assertEqual("04/14/17", arr[0].date())
-        self.assertEqual("04/17/17", arr[1].date())
-
         self.assertEqual (
-            "Pollux\t2017-04-14\t23:50:14\t15d1.5\t27d59.1\t84d33.4",
+            "Pollux\t2017-04-14\t23:50:14\t15d1.5\t27d59.1\t83d43.8",
             str(arr[0])
         )
         self.assertEqual (
-            "Sirius\t2017-04-17\t09:30:30\t45d11.9\t-16d44.5\t239d13.1",
+            "Sirius\t2017-04-17\t09:30:30\t45d11.9\t-16d44.5\t247d6.2",
             str(arr[1])
         )
