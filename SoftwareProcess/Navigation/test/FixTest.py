@@ -56,7 +56,7 @@ class FixTest(unittest.TestCase):
 
         lines = self.files[-1].readlines()
         match = self.regex.match(lines[-1])
-        expected = "Start of log"
+        expected = "Log file:\tlog.txt"
 
         self.assertEqual(1, len(lines))
         self.assertTrue(match, "bad timestamp: " + lines[-1])
@@ -79,7 +79,7 @@ class FixTest(unittest.TestCase):
 
         lines = self.files[-1].readlines()
         match = self.regex.match(lines[-1])
-        expected = "Start of log"
+        expected = "Log file:\tlog.txt"
 
         self.assertEqual(1, len(lines))
         self.assertTrue(match, "bad timestamp: " + lines[-1])
@@ -97,7 +97,7 @@ class FixTest(unittest.TestCase):
 
         lines = self.files[-1].readlines()
         match = self.regex.match(lines[-1])
-        expected = "Start of sighting file: " + self.fname
+        expected = "Sighting file: " + self.fname
 
         self.assertEqual(2, len(lines))
         self.assertTrue(match, "bad timestamp: " + lines[-1])
@@ -120,7 +120,7 @@ class FixTest(unittest.TestCase):
 
         lines = self.files[-1].readlines()
         match = self.regex.match(lines[-1])
-        expected = "End of sighting file: " + self.fname
+        expected = "End of sighting file " + self.fname
 
         self.assertEqual(5, len(lines))
         self.assertTrue(match, "bad timestamp: " + lines[-1])
