@@ -47,13 +47,13 @@ class Fix(object):
             )
 
     # store name instead of FD to avoid zombie FD
-        self.sightings = sightingFile
-
         try:
             with open(sightingFile, "r") as sitngs, open(self.log, "a") as log:
                 log.write (
                     Logger.logify("Sighting file:\t" + sightingFile)
                 )
+
+                self.sightings = sightingFile
         except(IOError):
             raise ValueError (
                 self.__class__.__name__ + "."
@@ -99,5 +99,27 @@ class Fix(object):
             raise ValueError (
                 self.__class__.__name__ + "."
                 + self.setAriesFile.__name__
+                + ": invalid file name"
+            )
+
+    def setStarFile(self, starFile):
+        starFile = path.abspath(path.normpath(starFile))
+        if re.compile("^(/[^/]+)+\.txt$").match(starFile) == None:
+            raise ValueError (
+                self.__class__.__name__ + "."
+                + self.setStarFile.__name__
+                + ": invalid file name"
+            )
+
+        try:
+            with open(starFile, "r") as aries, open(self.log, "a") as log:
+                log.write (
+                    Logger.logify("Star file:\t" + ariesFile)
+                )
+                self.star = starFile
+        except(IOError):
+            raise ValueError (
+                self.__class__.__name__ + "."
+                + self.setStarFile.__name__
                 + ": invalid file name"
             )
