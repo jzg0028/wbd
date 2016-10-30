@@ -16,11 +16,12 @@ import re
 class Fix(object):
 
     def __init__(self, logFile = "log.txt"):
-        if logFile.count(".txt") == 0 or logFile[-5:] == ".txt":
+        logFile = path.abspath(path.normpath(logFile))
+        if re.compile("^(/[^/]+)+\.txt$").match(logFile) == None:
             raise ValueError (
                 self.__class__.__name__ + "."
                 + self.__init__.__name__
-                + ": invalid filelogFile"
+                + ": invalid filename"
             )
 
     # must store logFile instead of FD to avoid zombie FD
@@ -37,7 +38,8 @@ class Fix(object):
             )
 
     def setSightingFile(self, sightingFile):
-        if sightingFile.count(".xml") == 0 or sightingFile[-5:] == ".xml":
+        sightingFile = path.abspath(path.normpath(sightingFile))
+        if re.compile("^(/[^/]+)+\.xml$").match(sightingFile) == None:
             raise ValueError (
                 self.__class__.__name__ + "."
                 + self.setSightingFile.__name__
@@ -80,7 +82,7 @@ class Fix(object):
 
     def setAriesFile(self, ariesFile):
         ariesFile = path.abspath(path.normpath(ariesFile))
-        if re.compile("\w+\.txt$").match(ariesFile) == None:
+        if re.compile("^(/[^/]+)+\.txt$").match(ariesFile) == None:
             raise ValueError (
                 self.__class__.__name__ + "."
                 + self.setAriesFile.__name__
