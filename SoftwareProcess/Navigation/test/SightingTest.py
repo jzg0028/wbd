@@ -9,10 +9,10 @@ class SightingTest(unittest.TestCase):
         arr = Sighting.parse(fname)
 
         self.assertEqual (
-            "Aldebran\t2016-03-01\t23:40:01\t15d1.5",
+            "Pollux\t2017-04-14\t23:50:14\t15d01.5\t27d59.1\t84d33.4",
             str(arr[0])
         )
         self.assertEqual (
-            "Peacock\t2016-03-02\t00:05:05\t45d11.9",
+            "Sirius\t2017-04-17\t09:30:30\t45d11.9\t-16d44.5\t239d13.1",
             str(arr[1])
         )
