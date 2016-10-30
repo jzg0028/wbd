@@ -88,3 +88,16 @@ class Fix(object):
                 + self.setAriesFile.__name__
                 + ": invalid file name"
             )
+
+            try:
+                with open(ariesFile, "r") as aries, open(self.log, "a") as log:
+                    log.write (
+                        Logger.logify("Aries file:\t" + ariesFile)
+                    )
+                    self.aries = ariesFile
+            except(IOError):
+                raise ValueError (
+                    self.__class__.__name__ + "."
+                    + self.setAriesFile.__name__
+                    + ": invalid file name"
+                )
