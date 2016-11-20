@@ -1,6 +1,7 @@
 """
     October 5th 2016
     October 6th 2016
+    November 20th 2016
 
     author: Jesse Gamez
 """
@@ -61,7 +62,9 @@ class Fix(object):
                 + ": invalid filename"
             )
 
-    def getSightings(self):
+    def getSightings(self, assumedLatitude = "0d0.0",
+        assumedLongitude = "0d0.0"):
+
         if not hasattr(self, 'sightings'):
             raise ValueError (
                 self.__class__.__name__ + "."
