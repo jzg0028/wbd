@@ -26,7 +26,7 @@ class SightingTest(unittest.TestCase):
             str(arr[0])
         )
         self.assertEqual (
-            "Sirius\t2017-04-17\t09:30:30\t45d11.9\t-16d44.5\t247d6.2",
+            "Sirius\t2017-04-17\t09:30:30\t45d11.9\t343d15.5\t247d6.2",
             str(arr[1])
         )
 
@@ -38,8 +38,8 @@ class SightingTest(unittest.TestCase):
             'aries.txt'
         )
 
-        self.assertEqual('83d43.8', arr[0].geographicLongitude())
-        self.assertEqual('247d6.2', arr[1].geographicLongitude())
+        self.assertEqual('83d43.8', arr[0].geographicLongitude().getString())
+        self.assertEqual('247d6.2', arr[1].geographicLongitude().getString())
 
     def testGeographicLatitude(self):
         arr = self.getSightings (
@@ -49,8 +49,8 @@ class SightingTest(unittest.TestCase):
             'aries.txt'
         )
 
-        self.assertEqual('27d59.1', arr[0].geographicLatitude())
-        self.assertEqual('-16d44.5', arr[1].geographicLatitude())
+        self.assertEqual('27d59.1', arr[0].geographicLatitude().getString())
+        self.assertEqual('343d15.5', arr[1].geographicLatitude().getString())
 
     def testAdjustedAltitude(self):
         arr = self.getSightings (
@@ -60,5 +60,5 @@ class SightingTest(unittest.TestCase):
             'aries.txt'
         )
 
-        self.assertEqual('15d1.5', arr[0].adjustedAltitude())
-        self.assertEqual('45d11.9', arr[1].adjustedAltitude())
+        self.assertEqual('15d1.5', arr[0].adjustedAltitude().getString())
+        self.assertEqual('45d11.9', arr[1].adjustedAltitude().getString())
