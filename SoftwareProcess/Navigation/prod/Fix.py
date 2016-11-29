@@ -83,7 +83,14 @@ class Fix(object):
                 + assumedLongitude
             )
 
-        match = re.compile('^(?:0?0?0d0?0.0|(S|N)0?(?:(?:(?:[1-8]\d|0?[1-9])d[0-5]?\d\.\d)|0?0d(?:[1-5]\d\.\d|0?[1-9]\.\d|0?0\.[1-9])))$').match(assumedLatitude)
+        match = re.compile (
+            '^(?:0?0?0d0?0.0|' \
+            + '(S|N)0?(?:(?:(?:[1-8]\d|' \
+            + '0?[1-9])d[0-5]?\d\.\d)|' \
+            + '0?0d(?:[1-5]\d\.\d|' \
+            + '0?[1-9]\.\d|' \
+            + '0?0\.[1-9])))$'
+        ).match(assumedLatitude)
 
         if match is None:
             raise ValueError (

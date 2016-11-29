@@ -6,13 +6,13 @@ from Navigation.prod.util.Star import Star
 from Navigation.prod.util.Aries import Aries
 import re
 
-def parse(sightingFile, starFile, ariesFile):
-    return tuple((Sighting(sighting, starFile, ariesFile))
-        for sighting in ET.parse(sightingFile).getroot())
-
 class Sighting(object):
-    def __init__(self, node, starFile, ariesFile):
+    def __init__(self, node, starFile,
+        ariesFile, assumedLatitude, assumedLongitude):
+
         self.arr = dict((child.tag, child.text) for child in node)
+
+        self.assLat, self.assLon = assumedLatitude, assumedLongitude
 
         date = self.date()
         hour = self.hour()
@@ -76,8 +76,50 @@ class Sighting(object):
 
         return gha2
 
-    def localHourAngle(self, assumedLongitude):
-        return self.geographicLongitude()
+    def localHourAngle(self):
+        return Angle (
+            self.geographicLongitude().getDegrees()
+            - Angle().setDegreesAndMinutes(self.assLon)
+        )
+
+    def correctedAltitude(self):
+        rGeoLat = math.radians(self.geographicLatitude().getDegrees())
+        rAssLat = math.radians(Angle().setDegreesAndMinutes(self.assLat[1:]))
+        rLHA = math.radians(self.localHourAngle().getDegrees())
+
+        return Angle (
+            math.asin (
+                (math.sin(rGeoLat)
+                * math.sin(rAssLat))
+                + (math.cos(rGeoLat)
+                * math.cos(rAssLat)
+                * math.cos(rLHA))
+            )
+        )
+
+    def distanceAdjustment(self):
+        return int (
+            round (
+                (self.adjustedAltitude().getDegrees()
+                - self.correctedAltitude().getDegrees())
+                * 60
+            )
+        )
+
+    def azimuthAdjustment(self):
+        rGeoLat = math.radians(self.geographicLatitude().getDegrees())
+        rAssLat = math.radians(Angle().setDegreesAndMinutes(self.assLat[1:]))
+        rDisAdj = math.radians (self.distanceAdjustment() / 60.0)
+
+        return Angle (
+            math.acos (
+                (math.sin(rGeoLat)
+                - math.sin(rAssLat)
+                * math.sin(rDisAdj))
+                / (math.cos(rAssLat)
+                * math.cos(rDisAdj))
+            )
+        )
 
     def __str__(self):
         return (self.arr["body"]
@@ -85,4 +127,7 @@ class Sighting(object):
             + "\t" + self.arr["time"]
             + "\t" + self.adjustedAltitude().getString()
             + "\t" + self.geographicLatitude().getString()
-            + "\t" + self.geographicLongitude().getString())
+            + "\t" + self.geographicLongitude().getString()
+            + "\t" + self.assLat + "\t" + self.assLon
+            + "\t" + self.azimuthAdjustment().getString()
+            + "\t" + str(self.distanceAdjustment()))
