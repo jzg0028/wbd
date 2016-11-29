@@ -30,7 +30,7 @@ class Sighting(object):
         dip = (0 if self.arr["horizon"] == "Artificial"
         else (-0.97 * math.sqrt(float(self.arr["height"]))) / 60)
 
-        return altitude + dip + refraction
+        return Angle(altitude + dip + refraction).getString()
 
     def geographicLatitude(self):
         return self.star.declination
@@ -78,6 +78,6 @@ class Sighting(object):
         return (self.arr["body"]
             + "\t" + self.arr["date"]
             + "\t" + self.arr["time"]
-            + "\t" + Angle(self.adjustedAltitude()).getString()
+            + "\t" + self.adjustedAltitude()
             + "\t" + self.geographicLatitude()
             + "\t" + self.geographicLongitude())
