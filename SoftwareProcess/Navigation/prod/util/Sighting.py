@@ -30,10 +30,12 @@ class Sighting(object):
         dip = (0 if self.arr["horizon"] == "Artificial"
         else (-0.97 * math.sqrt(float(self.arr["height"]))) / 60)
 
-        return Angle(altitude + dip + refraction).getString()
+        return Angle(altitude + dip + refraction)
 
     def geographicLatitude(self):
-        return self.star.declination
+        a = Angle()
+        a.setDegreesAndMinutes(self.star.declination)
+        return a
 
     def date(self):
         match = re.compile("^\d\d(\d\d)-(\d\d)-(\d\d)$").match(self.arr["date"])
@@ -54,7 +56,7 @@ class Sighting(object):
         hda = Angle()
         hda.setDegreesAndMinutes(self.star.hda)
         hda.add(self.ghaAries())
-        return hda.getString()
+        return hda
 
     def ghaAries(self):
         gha1 = Angle()
@@ -74,10 +76,13 @@ class Sighting(object):
 
         return gha2
 
+    def localHourAngle(self, assumedLongitude):
+        return self.geographicLongitude()
+
     def __str__(self):
         return (self.arr["body"]
             + "\t" + self.arr["date"]
             + "\t" + self.arr["time"]
-            + "\t" + self.adjustedAltitude()
-            + "\t" + self.geographicLatitude()
-            + "\t" + self.geographicLongitude())
+            + "\t" + self.adjustedAltitude().getString()
+            + "\t" + self.geographicLatitude().getString()
+            + "\t" + self.geographicLongitude().getString())
