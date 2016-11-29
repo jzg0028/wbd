@@ -112,6 +112,55 @@ class FixTest(unittest.TestCase):
         with self.assertRaises(Exception):
             fix.getSightings()
 
+    def testGetSightingsAssumedValidation(self):
+        root = "SoftwareProcess/Navigation/resources/"
+        sighting = root + "sightings.xml"
+        star = root + "stars.txt"
+        aries = root + "aries.txt"
+
+        fix = Fix()
+        fix.setSightingFile(sighting)
+        fix.setStarFile(star)
+        fix.setAriesFile(aries)
+
+        self.files.append(open("log.txt", "r"))
+
+    # invalid latitudes
+        for invalid in ('100d00.0', '90d00.0', '0d60.0', '-1d00.0'):
+            with self.assertRaises(ValueError):
+                fix.getSightings(assumedLatitude = 'S' + invalid)
+            with self.assertRaises(ValueError):
+                fix.getSightings(assumedLatitude = 'N' + invalid)
+
+    # should have S or N if not 0d0.0
+        with self.assertRaises(ValueError):
+            fix.getSightings(assumedLatitude = '8d8.8')
+
+    # invalid longitudes
+        for invalid in ('360d00.0', '0d60.0', '-1d00.0'):
+            with self.assertRaises(ValueError):
+                fix.getSightings(assumedLongitude = invalid)
+
+    # some possible valid values for assumed latitude and longitude
+        try:
+            for i in xrange(0, 10, 3):
+                for j in xrange(0, 60, 20):
+                    funcName = 'assumedLongitude'
+                    for k in xrange(0, 360, 120):
+                        valid = str(k) + 'd' + str(j) + '.' + str(i)
+                        fix.getSightings(assumedLongitude = valid)
+                    funcName = 'assumedLatitude'
+                    for k in xrange(0, 90, 30):
+                        valid = str(k) + 'd' + str(j) + '.' + str(i)
+                        if valid == '0d0.0':
+                            fix.getSightings(assumedLatitude = valid)
+                        else:
+                            for l in ('N', 'S'):
+                                current = l + valid
+                                fix.getSightings(assumedLatitude = current)
+        except ValueError:
+            self.fail("getSightings: " + funcName + ": " + valid)
+
     def testGetSightingsSet(self):
         root = "SoftwareProcess/Navigation/resources/"
         sighting = root + "sightings.xml"
