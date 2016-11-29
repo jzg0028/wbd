@@ -72,6 +72,27 @@ class Fix(object):
                 + ": sighting file not set"
             )
 
+        match = re.compile('^(?:[0-2]?\d?\d|3[0-5]\d)d(?:[0-5]?\d\.\d)$') \
+            .match(assumedLongitude)
+
+        if match is None:
+            raise ValueError (
+                self.__class__.__name__ + "."
+                + self.getSightings.__name__
+                + ": incorrect value for assumedLongitude: "
+                + assumedLongitude
+            )
+
+        match = re.compile('^(?:0?0?0d0?0.0|(S|N)0?(?:(?:(?:[1-8]\d|0?[1-9])d[0-5]?\d\.\d)|0?0d(?:[1-5]\d\.\d|0?[1-9]\.\d|0?0\.[1-9])))$').match(assumedLatitude)
+
+        if match is None:
+            raise ValueError (
+                self.__class__.__name__ + "."
+                + self.getSightings.__name__
+                + ": incorrect value for assumedLatitude: "
+                + assumedLatitude
+            )
+
     # any errors at this point are undefined
         with open(self.log, "a") as log:
             errors = 0
