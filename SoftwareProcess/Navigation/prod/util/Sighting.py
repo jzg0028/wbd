@@ -4,40 +4,38 @@ import math
 from Navigation.prod.Angle import Angle
 from Navigation.prod.util.Star import Star
 from Navigation.prod.util.Aries import Aries
+from Navigation.prod.util.Coordinate import Coordinate
 import re
 
 class GeographicPosition(object):
     def __init__(self, star, aries1, aries2, seconds):
-        self.dLong = (Angle().setDegreesAndMinutes(star.hda)
-        + (Angle().setDegreesAndMinutes(aries1.gha)
-        + (Angle().setDegreesAndMinutes(aries2.gha)
-        - Angle().setDegreesAndMinutes(aries1.gha))
-        * seconds / 3600))
+            self.lon = Angle((Angle().setDegreesAndMinutes(star.hda)
+            + (Angle().setDegreesAndMinutes(aries1.gha)
+            + (Angle().setDegreesAndMinutes(aries2.gha)
+            - Angle().setDegreesAndMinutes(aries1.gha))
+            * seconds / 3600)))
 
-        self.dLat = (Angle().setDegreesAndMinutes(star.declination))
+            self.lat = Angle(Angle().setDegreesAndMinutes(star.declination))
 
     def latitude(self):
-        return Angle(self.dLat)
+        return self.lat
 
     def longitude(self):
-        return Angle(self.dLong)
+        return self.lon
 
 class Adjustment(object):
 # CONVERT PRESSURE, TEMPERATURE TO INT
 # HEIGHT TO FLOAT
     def __init__(self, observation, pressure,
         temperature, horizon, height, geographicPosition,
-        assumedLatitude, assumedLongitude):
+        assumedCoordinates):
 
         (self.observation, self.pressure,
         self.temperature, self.horizon,
         self.height, self.geographicPosition,
-        self.assumedLatitude,
-        self.assumedLongitude) = (Angle().setDegreesAndMinutes(observation),
+        self.assumedCoordinates) = (Angle().setDegreesAndMinutes(observation),
         pressure, temperature, horizon == 'Artificial',
-        height, geographicPosition,
-        Angle(Angle().setDegreesAndMinutes(assumedLatitude)),
-        Angle(Angle().setDegreesAndMinutes(assumedLongitude)))
+        height, geographicPosition, assumedCoordinates)
 
     def altitude(self):
         return Angle (
@@ -49,10 +47,13 @@ class Adjustment(object):
         )
 
     def distance(self):
-        rGeoLat = math.radians(self.geographicPosition.dLat)
-        rAssLat = math.radians(self.assumedLatitude.getDegrees())
+        rGeoLat = math.radians(self.geographicPosition.latitude().getDegrees())
+        rAssLat = math.radians (
+            self.assumedCoordinates.latitudeAngle().setDegrees()
+        )
         rLHA = math.radians (
-            self.geographicPosition.dLong - self.assumedLatitude.getDegrees()
+            self.geographicPosition.longitude().getDegrees()
+            - self.assumedCoordinates.latitudeAngle().getDegrees()
         )
 
         return int(round((self.altitude().getDegrees()
@@ -64,8 +65,10 @@ class Adjustment(object):
                 * 60))
 
     def azimuth(self):
-        rGeoLat = math.radians(self.geographicPosition.dLat)
-        rAssLat = math.radians(self.assumedLatitude.getDegrees())
+        rGeoLat = math.radians(self.geographicPosition.latitude().getDegrees())
+        rAssLat = math.radians (
+            self.assumedCoordinates.latitudeAngle().setDegrees()
+        )
         rDisAdj = math.radians(self.distance() / 60.0)
 
         return Angle (
@@ -80,19 +83,18 @@ class Adjustment(object):
 
 class Sighting(object):
     def __init__(self, node, starFile,
-        ariesFile, assumedLatitude, assumedLongitude):
+        ariesFile, assumedCoordinates):
 
         arr = dict((child.tag, child.text) for child in node)
 
-        (self.assLat, self.assLon, self.date,
-        self.time, self.body) = (assumedLatitude,
-        assumedLongitude, arr['date'],
-        arr['time'], arr['body'])
+        (self.assumedCoordinates, self.date,
+        self.time, self.body) = (assumedCoordinates,
+        arr['date'], arr['time'], arr['body'])
 
         match = re.compile('^\d\d(\d\d)-(\d\d)-(\d\d)$') \
             .match(arr['date'])
         date = match.group(2) + '/' + match.group(3) + '/' + match.group(1)
-        
+
         match = re.compile('^(\d\d):(\d\d):(\d\d)$').match(arr['time'])
         hour = int(match.group(1))
         seconds = (int(match.group(2)) * 60) + int(match.group(3))
@@ -111,9 +113,7 @@ class Sighting(object):
             arr['horizon'],
             float(arr['height']),
             self.geographicPosition,
-        # negative angle is S, else positive
-            self.assLat.replace('S', '-').replace('N', ''),
-            self.assLon
+            self.assumedCoordinates
         )
 
     def __str__(self):
@@ -123,6 +123,7 @@ class Sighting(object):
             + "\t" + self.adjustment.altitude().getString()
             + "\t" + self.geographicPosition.latitude().getString()
             + "\t" + self.geographicPosition.longitude().getString()
-            + "\t" + self.assLat + "\t" + self.assLon
+            + "\t" + self.assumedCoordinates.latitude
+            + "\t" + self.assumedCoordinates.longitude
             + "\t" + self.adjustment.azimuth().getString()
             + "\t" + str(self.adjustment.distance()))

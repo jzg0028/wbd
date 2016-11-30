@@ -11,6 +11,7 @@ import xml.etree.ElementTree as ET
 import Navigation.prod.util.Logger as Logger
 from Navigation.prod.util.Sighting import Sighting
 from os import path
+from Navigation.prod.util.Coordinate import Coordinate
 import re
 
 
@@ -72,42 +73,25 @@ class Fix(object):
                 + ": sighting file not set"
             )
 
-        match = re.compile('^(?:[0-2]?\d?\d|3[0-5]\d)d(?:[0-5]?\d\.\d)$') \
-            .match(assumedLongitude)
-
-        if match is None:
+        try:
+            assumedCoordinates = Coordinate(assumedLongitude, assumedLatitude)
+        except ValueError e:
             raise ValueError (
-                self.__class__.__name__ + "."
+                self.__class__.name__ + '.'
                 + self.getSightings.__name__
-                + ": incorrect value for assumedLongitude: "
-                + assumedLongitude
+                + ': ' + e
             )
 
-        match = re.compile (
-            '^(?:0?0?0d0?0.0|' \
-            + '(S|N)0?(?:(?:(?:[1-8]\d|' \
-            + '0?[1-9])d[0-5]?\d\.\d)|' \
-            + '0?0d(?:[1-5]\d\.\d|' \
-            + '0?[1-9]\.\d|' \
-            + '0?0\.[1-9])))$'
-        ).match(assumedLatitude)
-
-        if match is None:
-            raise ValueError (
-                self.__class__.__name__ + "."
-                + self.getSightings.__name__
-                + ": incorrect value for assumedLatitude: "
-                + assumedLatitude
-            )
-
-    # any errors at this point are undefined
+        arr = []
         with open(self.log, "a") as log:
             errors = 0
             for sighting in ET.parse(self.sightings).getroot():
                 try:
+                    arr.append(Sighting(sighting, self.star,
+                    self.aries, assumedCoordinates))
                     log.write (
                         Logger.logify (
-                            str(Sighting(sighting, self.star, self.aries))
+                            str(arr[-1])
                         )
                     )
                 except:
@@ -118,7 +102,13 @@ class Fix(object):
                     "Sighting errors:\t" + str(errors)
                 )
             )
-            return ("0d0.0", "0d0.0")
+
+        Angle().setDegreesAndMinutes(assumedLatitude.replace('S', '-'))
+            + sum([(i.adjustment.distance()
+            * math.cos(i.adjustment.azimuth().getDegrees()))
+            for i in arr]) / 60.0
+
+        return ("0d0.0", "0d0.0")
 
     def setAriesFile(self, ariesFile):
         ariesFile = path.abspath(path.normpath(ariesFile))
