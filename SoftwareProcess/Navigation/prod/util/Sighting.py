@@ -9,13 +9,13 @@ import re
 
 class GeographicPosition(object):
     def __init__(self, star, aries1, aries2, seconds):
-            self.lon = Angle((Angle().setDegreesAndMinutes(star.hda)
-            + (Angle().setDegreesAndMinutes(aries1.gha)
-            + (Angle().setDegreesAndMinutes(aries2.gha)
-            - Angle().setDegreesAndMinutes(aries1.gha))
-            * seconds / 3600)))
+        self.lon = Angle((Angle().setDegreesAndMinutes(star.hda)
+        + (Angle().setDegreesAndMinutes(aries1.gha)
+        + (Angle().setDegreesAndMinutes(aries2.gha)
+        - Angle().setDegreesAndMinutes(aries1.gha))
+        * seconds / 3600)))
 
-            self.lat = Angle(Angle().setDegreesAndMinutes(star.declination))
+        self.lat = Angle(Angle().setDegreesAndMinutes(star.declination))
 
     def latitude(self):
         return self.lat
@@ -49,11 +49,11 @@ class Adjustment(object):
     def distance(self):
         rGeoLat = math.radians(self.geographicPosition.latitude().getDegrees())
         rAssLat = math.radians (
-            self.assumedCoordinates.latitudeAngle().setDegrees()
+            self.assumedCoordinates.lat
         )
         rLHA = math.radians (
             self.geographicPosition.longitude().getDegrees()
-            - self.assumedCoordinates.latitudeAngle().getDegrees()
+            - self.assumedCoordinates.lon
         )
 
         return int(round((self.altitude().getDegrees()
@@ -67,7 +67,7 @@ class Adjustment(object):
     def azimuth(self):
         rGeoLat = math.radians(self.geographicPosition.latitude().getDegrees())
         rAssLat = math.radians (
-            self.assumedCoordinates.latitudeAngle().setDegrees()
+            self.assumedCoordinates.lat
         )
         rDisAdj = math.radians(self.distance() / 60.0)
 
@@ -123,7 +123,7 @@ class Sighting(object):
             + "\t" + self.adjustment.altitude().getString()
             + "\t" + self.geographicPosition.latitude().getString()
             + "\t" + self.geographicPosition.longitude().getString()
-            + "\t" + self.assumedCoordinates.latitude
-            + "\t" + self.assumedCoordinates.longitude
+            + "\t" + self.assumedCoordinates.latStr()
+            + "\t" + self.assumedCoordinates.lonStr()
             + "\t" + self.adjustment.azimuth().getString()
             + "\t" + str(self.adjustment.distance()))
