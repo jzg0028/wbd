@@ -38,8 +38,10 @@ class SightingTest(unittest.TestCase):
             'aries.txt'
         )
 
-        self.assertEqual('83d43.8', arr[0].geographicLongitude().getString())
-        self.assertEqual('247d6.2', arr[1].geographicLongitude().getString())
+        self.assertEqual('83d43.8', arr[0].geographicPosition
+            .longitude().getString())
+        self.assertEqual('247d6.2', arr[1].geographicPosition
+            .longitude().getString())
 
     def testGeographicLatitude(self):
         arr = self.getSightings (
@@ -49,8 +51,10 @@ class SightingTest(unittest.TestCase):
             'aries.txt'
         )
 
-        self.assertEqual('27d59.1', arr[0].geographicLatitude().getString())
-        self.assertEqual('343d15.5', arr[1].geographicLatitude().getString())
+        self.assertEqual('27d59.1', arr[0].geographicPosition
+            .latitude().getString())
+        self.assertEqual('343d15.5', arr[1].geographicPosition
+            .latitude().getString())
 
     def testAdjustedAltitude(self):
         arr = self.getSightings (
@@ -60,5 +64,5 @@ class SightingTest(unittest.TestCase):
             'aries.txt'
         )
 
-        self.assertEqual('15d1.5', arr[0].adjustedAltitude().getString())
-        self.assertEqual('45d11.9', arr[1].adjustedAltitude().getString())
+        self.assertEqual('15d1.5', arr[0].adjustment.altitude().getString())
+        self.assertEqual('45d11.9', arr[1].adjustment.altitude().getString())
