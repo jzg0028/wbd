@@ -16,7 +16,7 @@ class Coordinate(object):
         (self.lat % 1) * 60)))
 
     def lonStr(self):
-        return self.lon.getString()
+        return Angle(self.lon).getString()
 
     def setByString(self, latitude, longitude):
         self.setByDegree (
