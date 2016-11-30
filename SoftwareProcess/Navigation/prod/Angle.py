@@ -10,7 +10,10 @@ class Angle(object):
     __minute = 60
 
     def __init__(self, degrees = 0):
-        self.setDegrees(degrees)
+        if type(degrees) is float or type(degrees) is int:
+            self.setDegrees(degrees)
+        else:
+            self.setDegreesAndMinutes(degrees)
 
     def setDegrees(self, degrees = 0):
         try:
@@ -22,8 +25,7 @@ class Angle(object):
                 + ":  doesn't look like a float"
             )
 
-    # set the positive degrees as % 360
-        self.angle = degrees % self.__period
+        self.angle = degrees
 
         return self.getDegrees()
 
@@ -83,4 +85,4 @@ class Angle(object):
             (self.getDegrees() % 1) * self.__minute))
 
     def getDegrees(self):
-        return self.angle
+        return self.angle % self.__period
