@@ -35,7 +35,7 @@ class Angle(object):
         match = re.compile("^(-?)(\d{1,3})d(\d{1,2}\.\d)$").match(degrees)
 
     # if the regex found a match in degrees
-        if(match):
+        if match:
         # return degrees + minutes / minute
             return self.setDegrees (
                 int(match.group(1) + match.group(2))
@@ -47,7 +47,7 @@ class Angle(object):
         raise ValueError (
             self.__class__.__name__ + "."
             + self.setDegreesAndMinutes.__name__
-            + ":  must be string with this format: -?##0d#0.0"
+            + ":  invalid string format: " + degrees
         )
 
     def add(self, angle):
