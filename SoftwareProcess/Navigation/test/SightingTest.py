@@ -2,6 +2,7 @@ import unittest
 
 from Navigation.prod.util.Sighting import Sighting
 import xml.etree.ElementTree as ET
+from Navigation.prod.util.Coordinate import Coordinate
 
 class SightingTest(unittest.TestCase):
 
@@ -10,7 +11,7 @@ class SightingTest(unittest.TestCase):
         star = root + star
         aries = root + aries
 
-        return [Sighting(node, star, aries, 'S1d0.0', '0d0.0')
+        return [Sighting(node, star, aries, Coordinate('S1d0.0', '0d0.0'))
             for node in ET.parse(sighting).getroot()]
     
     def testToString(self):
