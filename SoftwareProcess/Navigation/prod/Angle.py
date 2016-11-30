@@ -22,10 +22,6 @@ class Angle(object):
                 + ":  doesn't look like a float"
             )
 
-    # recursively add 360 to the degrees until its positive
-        if degrees < 0:
-            return self.setDegrees(degrees + self.__period)
-
     # set the positive degrees as % 360
         self.angle = degrees % self.__period
 
