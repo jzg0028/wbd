@@ -172,7 +172,8 @@ class FixTest(unittest.TestCase):
         fix.setStarFile(star)
         fix.setAriesFile(aries)
         
-        self.assertEqual(("S20d15.5", "79d19.9"), fix.getSightings())
+        self.assertEqual(("S20d15.5", "79d19.9"),
+            fix.getSightings('N27d59.5', '85d33.4'))
 
         self.files.append(open("log.txt", "r"))
 
