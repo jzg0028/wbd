@@ -5,6 +5,7 @@ import xml.etree.ElementTree as ET
 from Navigation.prod.util.Coordinate import Coordinate
 from Navigation.prod.util.Aries import Aries
 from Navigation.prod.util.Star import Star
+import math
 
 class SightingTest(unittest.TestCase):
 

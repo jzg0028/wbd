@@ -179,9 +179,9 @@ class FixTest(unittest.TestCase):
 
         lines = self.files[-1].readlines()
         match = self.regex.match(lines[-1])
-        expected = "Sighting errors:\t1"
+        expected = "Sighting errors:\t0"
 
-        self.assertEqual(7, len(lines))
+        self.assertEqual(6, len(lines))
         self.assertTrue(match, "bad timestamp: " + lines[-1])
         self.assertEqual(expected, match.group(1))
 
