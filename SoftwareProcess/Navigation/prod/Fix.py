@@ -12,6 +12,7 @@ import Navigation.prod.util.Logger as Logger
 from Navigation.prod.util.Sighting import Sighting
 from os import path
 from Navigation.prod.util.Coordinate import Coordinate
+import math
 import re
 
 
@@ -74,12 +75,12 @@ class Fix(object):
             )
 
         try:
-            assumedCoordinates = Coordinate(assumedLongitude, assumedLatitude)
-        except ValueError e:
+            assumedCoordinates = Coordinate(assumedLatitude, assumedLongitude)
+        except ValueError as e:
             raise ValueError (
-                self.__class__.name__ + '.'
+                self.__class__.__name__ + '.'
                 + self.getSightings.__name__
-                + ': ' + e
+                + ': ' + str(e)
             )
 
         arr = []
@@ -103,12 +104,20 @@ class Fix(object):
                 )
             )
 
-        Angle().setDegreesAndMinutes(assumedLatitude.replace('S', '-'))
+        approximate = Coordinate (
+            assumedCoordinates.lat
             + sum([(i.adjustment.distance()
-            * math.cos(i.adjustment.azimuth().getDegrees()))
+            * math.cos(math.radians(i
+            .adjustment.azimuth().getDegrees())))
+            for i in arr]) / 60.0,
+            assumedCoordinates.lon
+            + sum([(i.adjustment.distance()
+            * math.sin(math.radians(i
+            .adjustment.azimuth().getDegrees())))
             for i in arr]) / 60.0
+        )
 
-        return ("0d0.0", "0d0.0")
+        return (approximate.latStr(), approximate.lonStr())
 
     def setAriesFile(self, ariesFile):
         ariesFile = path.abspath(path.normpath(ariesFile))
