@@ -25,16 +25,28 @@ class SightingTest(unittest.TestCase):
             '85d33.4'
         )
 
-        star = Star(stars, 'Pollux', '04/17/17')
-        self.assertEqual('243d25.3', star.sha)
-        self.assertEqual('27d59.1', star.declination)
+        self.assertEqual('243d25.3',
+            arr[0].geographicPosition.star.sha)
+        self.assertEqual('27d59.1',
+            arr[0].geographicPosition.star.declination)
 
-        aries = Aries(arieses, '04/17/17', '23')
-        self.assertEqual('191d29.9', aries.gha1)
-        self.assertEqual('206d32.4', aries.gha2)
+        self.assertEqual('04/17/17',
+            arr[0].geographicPosition.aries.date)
+        self.assertEqual('27d59.1',
+            arr[0].geographicPosition.latitude().getString())
+        self.assertEqual('87d30.8',
+            arr[0].geographicPosition.longitude().getString())
 
-        self.assertEqual('27d59.1', arr[0].geographicPosition.lat.getString())
-        self.assertEqual('87d30.8', arr[0].geographicPosition.lon.getString())
+        self.assertEqual('173d4.2',
+            arr[0].adjustment.lha().getString())
+
+        self.assertAlmostEqual(-0.5538,
+            arr[0].adjustment.intermediateDistance(), 4)
+
+        self.assertEqual('15d1.5',
+            arr[0].adjustment.altitude().getString())
+
+        self.assertEqual(-2919, arr[0].adjustment.distance())
 
         self.assertEqual (
             "Pollux\t2017-04-14\t23:50:14\t15d1.5\t27d59.5\t" \
