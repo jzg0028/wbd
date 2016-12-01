@@ -8,7 +8,7 @@ from Navigation.prod.Fix import Fix
 class FixTest(unittest.TestCase):
 
     def setUp(self):
-        self.fname = "SoftwareProcess/Navigation/resources/sightings.xml"
+        self.fname = "SoftwareProcess/Navigation/resources/pollox.xml"
         self.files = []
         self.resources = []
         self.regex = re.compile (
@@ -163,7 +163,7 @@ class FixTest(unittest.TestCase):
 
     def testGetSightingsSet(self):
         root = "SoftwareProcess/Navigation/resources/"
-        sighting = root + "sightings.xml"
+        sighting = root + "pollux.xml"
         star = root + "stars.txt"
         aries = root + "aries.txt"
 
@@ -172,7 +172,7 @@ class FixTest(unittest.TestCase):
         fix.setStarFile(star)
         fix.setAriesFile(aries)
         
-        self.assertEqual(("0d0.0", "0d0.0"), fix.getSightings())
+        self.assertEqual(("S20d15.5", "79d19.9"), fix.getSightings())
 
         self.files.append(open("log.txt", "r"))
 
