@@ -61,7 +61,7 @@ class SightingTest(unittest.TestCase):
             arr[0].adjustment.azimuth().getString())
 
         self.assertEqual (
-            "Pollux\t2017-04-14\t23:50:14\t15d1.5\t27d59.5\t" \
-            + "84d33.4\tN27d59.5\t85d33.4\t7d21.1\t-2919",
+            "Pollux\t2017-04-17\t23:50:14\t15d1.5\t27d59.1\t" \
+            + "87d30.8\tN27d59.5\t85d33.4\t7d21.1\t-2919",
             str(arr[0])
         )
