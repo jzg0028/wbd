@@ -39,16 +39,12 @@ class SightingTest(unittest.TestCase):
 
         self.assertEqual('173d4.2',
             arr[0].adjustment.lha().getString())
-
         self.assertAlmostEqual(-0.5538,
             arr[0].adjustment.intermediateDistance(), 4)
-
         self.assertAlmostEqual(-33.6304,
             arr[0].adjustment.correctedAltitude(), 4)
-
         self.assertEqual('15d1.5',
             arr[0].adjustment.altitude().getString())
-
         self.assertEqual(-2919, arr[0].adjustment.distance())
 
         self.assertAlmostEqual(0.729178,
