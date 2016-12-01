@@ -1,22 +1,23 @@
 class Aries(object):
 
     def __init__(self, fname, date, hour):
-        line = self.search(fname, date, hour)
+        self.fname, self.date, self.hour = fname, date, hour
 
-        if line == None:
-            raise ValueError (
-                "date or hour too early: date: " + date + "hour: " + hour
-            )
+        self.gha1, self.gha2 = self.line()
 
-        self.gha = line[2][0:-1]
+    def line(self):
+        with open(self.fname, 'r') as ariesFile:
 
-    def search(self, fname, date, hour):
-        with open(fname, 'r') as ariesFile:
-
-            for line in ariesFile:
+            line = ariesFile.readline()
+            while line:
                 line = line.split('\t')
 
-                if line[0] == date and line[1] == hour:
-                    return line
+                if line[0] == self.date and line[1] == self.hour:
+                    return (line[2][0:-1],
+                        ariesFile.readline().split('\t')[2][0:-1])
 
-            return None
+                line = ariesFile.readline()
+
+            raise ValueError (
+                "date or hour too early: date: " + date + " hour: " + hour
+            )
