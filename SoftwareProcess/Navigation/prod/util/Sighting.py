@@ -9,7 +9,7 @@ import re
 
 class GeographicPosition(object):
     def __init__(self, star, aries1, aries2, seconds):
-        self.lon = Angle((Angle().setDegreesAndMinutes(star.hda)
+        self.lon = Angle((Angle().setDegreesAndMinutes(star.sha)
         + (Angle().setDegreesAndMinutes(aries1.gha)
         + (Angle().setDegreesAndMinutes(aries2.gha)
         - Angle().setDegreesAndMinutes(aries1.gha))
@@ -47,6 +47,13 @@ class Adjustment(object):
         )
 
     def distance(self):
+        return int(round((self.altitude().getDegrees()
+            - self.correctedAltitude()) * 60))
+
+    def correctedAltitude(self):
+        return math.asin(self.intermediateDistance())
+
+    def intermediateDistance(self):
         rGeoLat = math.radians(self.geographicPosition.lat.getDegrees())
         rAssLat = math.radians (
             self.assumedCoordinates.lat
@@ -56,30 +63,35 @@ class Adjustment(object):
             - self.assumedCoordinates.lon
         )
 
-        return int(round((self.altitude().getDegrees()
-            - math.asin((math.sin(rGeoLat)
+        return ((math.sin(rGeoLat)
             * math.sin(rAssLat))
             + (math.cos(rGeoLat)
             * math.cos(rAssLat)
-            * math.cos(rLHA))))
-            * 60))
+            * math.cos(rLHA)))
 
-    def azimuth(self):
+    def azimuthNumerator(self):
         rGeoLat = math.radians(self.geographicPosition.lat.getDegrees())
         rAssLat = math.radians (
             self.assumedCoordinates.lat
         )
-        rDisAdj = math.radians(self.distance() / 60.0)
 
-        return Angle (
-            math.acos (
-                (math.sin(rGeoLat)
-                - math.sin(rAssLat)
-                * math.sin(rDisAdj))
-                / (math.cos(rAssLat)
-                * math.cos(rDisAdj))
-            )
+        return (math.sin(rGeoLat)
+        - math.sin(rAssLat)
+        * self.intermediateDistance())
+
+    def intermediateAzimuth(self):
+        return self.azimuthNumerator() / self.azimuthDenominator()
+
+    def azimuthDenominator(self):
+        rCorAlt = math.radians(self.correctedAltitude())
+        rAssLat = math.radians (
+            self.assumedCoordinates.lat
         )
+
+        return (math.cos(rAssLat) * math.cos(rCorAlt))
+
+    def azimuth(self):
+        return Angle(math.acos(self.intermediateAzimuth()))
 
 class Sighting(object):
     def __init__(self, node, starFile,

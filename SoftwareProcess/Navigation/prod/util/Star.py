@@ -6,7 +6,7 @@ class Star(object):
             raise ValueError("observed date too early")
 
         self.declination = line[3][0:-1]
-        self.hda = line[2]
+        self.sha = line[2]
 
     def floor(self, fname, body, date):
         with open(fname, 'r') as starFile:
