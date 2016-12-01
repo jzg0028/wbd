@@ -48,10 +48,10 @@ class Adjustment(object):
 
     def distance(self):
         return int(round((self.altitude().getDegrees()
-            - self.correctedAltitude().getDegrees()) * 60))
+            - self.correctedAltitude()) * 60))
 
     def correctedAltitude(self):
-        return Angle(math.degrees(math.asin(self.intermediateDistance())))
+        return math.degrees(math.asin(self.intermediateDistance()))
 
     def lha(self):
         return Angle(self.geographicPosition.longitude().getDegrees()
@@ -80,7 +80,7 @@ class Adjustment(object):
         return self.azimuthNumerator() / self.azimuthDenominator()
 
     def azimuthDenominator(self):
-        rCorAlt = math.radians(self.correctedAltitude().getDegrees())
+        rCorAlt = math.radians(self.correctedAltitude())
         rAssLat = math.radians(self.assumedCoordinates.lat)
 
         return (math.cos(rAssLat) * math.cos(rCorAlt))
