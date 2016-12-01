@@ -14,7 +14,7 @@ class Coordinate(object):
         return (('' if self.lat % 90 == 0 else
         'N' if self.lat > 0 else 'S')
         + ("%dd%.1f" % (int(abs(self.lat) % 90),
-        (self.lat % 1) * 60)))
+        (abs(self.lat) % 1) * 60)))
 
     def lonStr(self):
         return Angle(self.lon).getString()
