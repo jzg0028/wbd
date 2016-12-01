@@ -9,16 +9,16 @@ import re
 
 class GeographicPosition(object):
     def __init__(self, star, aries, seconds):
+        self.star, self.aries, self.seconds = star, aries, seconds
+
         self.lon = Angle((Angle().setDegreesAndMinutes(star.sha)
         + (Angle().setDegreesAndMinutes(aries.gha1)
         + (Angle().setDegreesAndMinutes(aries.gha2)
         - Angle().setDegreesAndMinutes(aries.gha1))
         * seconds / 3600)))
 
-        self.lat = Angle(Angle().setDegreesAndMinutes(star.declination))
-
     def latitude(self):
-        return self.lat
+        return Angle(self.star.declination)
 
     def longitude(self):
         return self.lon
@@ -48,20 +48,19 @@ class Adjustment(object):
 
     def distance(self):
         return int(round((self.altitude().getDegrees()
-            - self.correctedAltitude()) * 60))
+            - self.correctedAltitude().getDegrees()) * 60))
 
     def correctedAltitude(self):
-        return math.asin(self.intermediateDistance())
+        return Angle(math.degrees(math.asin(self.intermediateDistance())))
+
+    def lha(self):
+        return Angle(self.geographicPosition.longitude().getDegrees()
+        + self.assumedCoordinates.lon)
 
     def intermediateDistance(self):
-        rGeoLat = math.radians(self.geographicPosition.lat.getDegrees())
-        rAssLat = math.radians (
-            self.assumedCoordinates.lat
-        )
-        rLHA = math.radians (
-            self.geographicPosition.lon.getDegrees()
-            - self.assumedCoordinates.lon
-        )
+        rGeoLat = math.radians(self.geographicPosition.latitude().getDegrees())
+        rAssLat = math.radians(self.assumedCoordinates.lat)
+        rLHA = math.radians(self.lha().getDegrees())
 
         return ((math.sin(rGeoLat)
             * math.sin(rAssLat))
@@ -70,10 +69,8 @@ class Adjustment(object):
             * math.cos(rLHA)))
 
     def azimuthNumerator(self):
-        rGeoLat = math.radians(self.geographicPosition.lat.getDegrees())
-        rAssLat = math.radians (
-            self.assumedCoordinates.lat
-        )
+        rGeoLat = math.radians(self.geographicPosition.latitude().getDegrees())
+        rAssLat = math.radians(self.assumedCoordinates.lat)
 
         return (math.sin(rGeoLat)
         - math.sin(rAssLat)
@@ -83,10 +80,8 @@ class Adjustment(object):
         return self.azimuthNumerator() / self.azimuthDenominator()
 
     def azimuthDenominator(self):
-        rCorAlt = math.radians(self.correctedAltitude())
-        rAssLat = math.radians (
-            self.assumedCoordinates.lat
-        )
+        rCorAlt = math.radians(self.correctedAltitude().getDegrees())
+        rAssLat = math.radians(self.assumedCoordinates.lat)
 
         return (math.cos(rAssLat) * math.cos(rCorAlt))
 
@@ -132,8 +127,8 @@ class Sighting(object):
             + "\t" + self.date
             + "\t" + self.time
             + "\t" + self.adjustment.altitude().getString()
-            + "\t" + self.geographicPosition.lat.getString()
-            + "\t" + self.geographicPosition.lon.getString()
+            + "\t" + self.geographicPosition.latitude().getString()
+            + "\t" + self.geographicPosition.longitude().getString()
             + "\t" + self.assumedCoordinates.latStr()
             + "\t" + self.assumedCoordinates.lonStr()
             + "\t" + self.adjustment.azimuth().getString()
