@@ -1,3 +1,9 @@
+"""
+    November 30th 2016
+
+    author: Jesse Gamez
+"""
+
 from Navigation.prod.Angle import Angle
 import re
 

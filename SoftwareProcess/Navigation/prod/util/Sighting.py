@@ -11,17 +11,15 @@ class GeographicPosition(object):
     def __init__(self, star, aries, seconds):
         self.star, self.aries, self.seconds = star, aries, seconds
 
-        self.lon = Angle((Angle().setDegreesAndMinutes(star.sha)
-        + (Angle().setDegreesAndMinutes(aries.gha1)
-        + (Angle().setDegreesAndMinutes(aries.gha2)
-        - Angle().setDegreesAndMinutes(aries.gha1))
-        * seconds / 3600)))
-
     def latitude(self):
         return Angle(self.star.declination)
 
     def longitude(self):
-        return self.lon
+        return Angle((Angle(self.star.sha).getDegrees()
+        + (Angle(self.aries.gha1).getDegrees()
+        + (Angle(self.aries.gha2).getDegrees()
+        - Angle(self.aries.gha1).getDegrees())
+        * self.seconds / 3600)))
 
 class Adjustment(object):
 # CONVERT PRESSURE, TEMPERATURE TO INT
@@ -33,7 +31,7 @@ class Adjustment(object):
         (self.observation, self.pressure,
         self.temperature, self.horizon,
         self.height, self.geographicPosition,
-        self.assumedCoordinates) = (Angle().setDegreesAndMinutes(observation),
+        self.assumedCoordinates) = (Angle(observation).getDegrees(),
         pressure, temperature, horizon == 'Artificial',
         height, geographicPosition, assumedCoordinates)
 

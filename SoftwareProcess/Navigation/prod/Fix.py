@@ -2,6 +2,8 @@
     October 5th 2016
     October 6th 2016
     November 20th 2016
+    November 29th 2016
+    November 30th 2016
 
     author: Jesse Gamez
 """
