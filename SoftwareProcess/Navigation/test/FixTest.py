@@ -179,9 +179,10 @@ class FixTest(unittest.TestCase):
 
         lines = self.files[-1].readlines()
         match = self.regex.match(lines[-1])
-        expected = "Sighting errors:\t0"
+        expected = "Approximate latitude:\tN29d6.8" \
+            + "\tApproximate longitude:\t82d52.9"
 
-        self.assertEqual(6, len(lines))
+        self.assertEqual(7, len(lines))
         self.assertTrue(match, "bad timestamp: " + lines[-1])
         self.assertEqual(expected, match.group(1))
 
