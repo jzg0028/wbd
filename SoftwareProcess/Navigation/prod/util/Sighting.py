@@ -47,8 +47,8 @@ class Adjustment(object):
         )
 
     def distance(self):
-        return int(round((self.altitude().getDegrees()
-            - self.correctedAltitude()) * 60))
+        return int(round((self.correctedAltitude()
+            - self.altitude().getDegrees()) * 60))
 
     def correctedAltitude(self):
         return math.degrees(math.asin(self.intermediateDistance()))
