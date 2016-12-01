@@ -47,25 +47,25 @@ class Adjustment(object):
         )
 
     def distance(self):
-        rGeoLat = math.radians(self.geographicPosition.latitude().getDegrees())
+        rGeoLat = math.radians(self.geographicPosition.lat.getDegrees())
         rAssLat = math.radians (
             self.assumedCoordinates.lat
         )
         rLHA = math.radians (
-            self.geographicPosition.longitude().getDegrees()
+            self.geographicPosition.lon.getDegrees()
             - self.assumedCoordinates.lon
         )
 
         return int(round((self.altitude().getDegrees()
-                - math.asin((math.sin(rGeoLat)
-                * math.sin(rAssLat))
-                + (math.cos(rGeoLat)
-                * math.cos(rAssLat)
-                * math.cos(rLHA))))
-                * 60))
+            - math.asin((math.sin(rGeoLat)
+            * math.sin(rAssLat))
+            + (math.cos(rGeoLat)
+            * math.cos(rAssLat)
+            * math.cos(rLHA))))
+            * 60))
 
     def azimuth(self):
-        rGeoLat = math.radians(self.geographicPosition.latitude().getDegrees())
+        rGeoLat = math.radians(self.geographicPosition.lat.getDegrees())
         rAssLat = math.radians (
             self.assumedCoordinates.lat
         )
@@ -121,8 +121,8 @@ class Sighting(object):
             + "\t" + self.date
             + "\t" + self.time
             + "\t" + self.adjustment.altitude().getString()
-            + "\t" + self.geographicPosition.latitude().getString()
-            + "\t" + self.geographicPosition.longitude().getString()
+            + "\t" + self.geographicPosition.lat.getString()
+            + "\t" + self.geographicPosition.lon.getString()
             + "\t" + self.assumedCoordinates.latStr()
             + "\t" + self.assumedCoordinates.lonStr()
             + "\t" + self.adjustment.azimuth().getString()
