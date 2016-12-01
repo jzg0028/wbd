@@ -32,7 +32,7 @@ class Adjustment(object):
         self.temperature, self.horizon,
         self.height, self.geographicPosition,
         self.assumedCoordinates) = (Angle(observation).getDegrees(),
-        pressure, temperature, horizon == 'Artificial',
+        pressure, temperature, horizon == 'artificial',
         height, geographicPosition, assumedCoordinates)
 
     def altitude(self):
@@ -94,7 +94,7 @@ class Sighting(object):
 
         (self.assumedCoordinates, self.date,
         self.time, self.body) = (assumedCoordinates,
-        arr['date'], arr['time'], arr['body'])
+        arr['date'].strip(), arr['time'].strip(), arr['body'].strip())
 
         match = re.compile('^\d\d(\d\d)-(\d\d)-(\d\d)$') \
             .match(arr['date'])
@@ -105,16 +105,16 @@ class Sighting(object):
         seconds = (int(match.group(2)) * 60) + int(match.group(3))
 
         self.geographicPosition = GeographicPosition (
-            Star(starFile, arr['body'], date),
+            Star(starFile, self.body, date),
             Aries(ariesFile, date, str(hour)),
             seconds
         )
 
         self.adjustment = Adjustment (
-            arr['observation'],
-            int(arr['pressure']),
-            int(arr['temperature']),
-            arr['horizon'],
+            arr['observation'].strip(),
+            int(arr['pressure'].strip()),
+            int(arr['temperature'].strip()),
+            arr['horizon'].strip().lower(),
             float(arr['height']),
             self.geographicPosition,
             self.assumedCoordinates
