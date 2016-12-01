@@ -8,11 +8,11 @@ from Navigation.prod.util.Coordinate import Coordinate
 import re
 
 class GeographicPosition(object):
-    def __init__(self, star, aries1, aries2, seconds):
+    def __init__(self, star, aries, seconds):
         self.lon = Angle((Angle().setDegreesAndMinutes(star.sha)
-        + (Angle().setDegreesAndMinutes(aries1.gha)
-        + (Angle().setDegreesAndMinutes(aries2.gha)
-        - Angle().setDegreesAndMinutes(aries1.gha))
+        + (Angle().setDegreesAndMinutes(aries.gha1)
+        + (Angle().setDegreesAndMinutes(aries.gha2)
+        - Angle().setDegreesAndMinutes(aries.gha1))
         * seconds / 3600)))
 
         self.lat = Angle(Angle().setDegreesAndMinutes(star.declination))
@@ -114,7 +114,6 @@ class Sighting(object):
         self.geographicPosition = GeographicPosition (
             Star(starFile, arr['body'], date),
             Aries(ariesFile, date, str(hour)),
-            Aries(ariesFile, date, str((hour + 1) % 24)),
             seconds
         )
 
