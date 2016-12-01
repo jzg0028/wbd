@@ -3,6 +3,8 @@ import unittest
 from Navigation.prod.util.Sighting import Sighting
 import xml.etree.ElementTree as ET
 from Navigation.prod.util.Coordinate import Coordinate
+from Navigation.prod.util.Aries import Aries
+from Navigation.prod.util.Star import Star
 
 class SightingTest(unittest.TestCase):
 
@@ -14,56 +16,20 @@ class SightingTest(unittest.TestCase):
         return [Sighting(node, star, aries, Coordinate(lat, lon))
             for node in ET.parse(sighting).getroot()]
     
-    def testToString(self):
+    def testPollux(self):
         arr = self.getSightings (
             'SoftwareProcess/Navigation/resources/',
             'pollux.xml',
             'stars.txt',
             'aries.txt',
-            'S53d38.4',
-            '74d35.3'
+            'N27d59.5',
+            '85d33.4'
         )
+
+        
 
         self.assertEqual (
-            "Pollux\t2017-04-14\t23:50:14\t15d1.5\t27d59.1\t" \
-            + "84d33.4\tN27d59.5\t85d33.4\t292d44.6\t174",
+            "Pollux\t2017-04-14\t23:50:14\t15d1.5\t27d59.5\t" \
+            + "84d33.4\tN27d59.5\t85d33.4\t7d21.1\t-2919",
             str(arr[0])
         )
-
-    def testGeographicLongitude(self):
-        arr = self.getSightings (
-            'SoftwareProcess/Navigation/resources/',
-            'pollux.xml',
-            'stars.txt',
-            'aries.txt'
-            'S53d38.4',
-            '74d35.3'
-        )
-
-        self.assertEqual('84d33.4', arr[0].geographicPosition
-            .longitude().getString())
-
-    def testGeographicLatitude(self):
-        arr = self.getSightings (
-            'SoftwareProcess/Navigation/resources/',
-            'pollux.xml',
-            'stars.txt',
-            'aries.txt'
-            'S53d38.4',
-            '74d35.3'
-        )
-
-        self.assertEqual('27d59.1', arr[0].geographicPosition
-            .latitude().getString())
-
-    def testAdjustedAltitude(self):
-        arr = self.getSightings (
-            'SoftwareProcess/Navigation/resources/',
-            'pollux.xml',
-            'stars.txt',
-            'aries.txt'
-            'S53d38.4',
-            '74d35.3'
-        )
-
-        self.assertEqual('15d1.5', arr[0].adjustment.altitude().getString())
