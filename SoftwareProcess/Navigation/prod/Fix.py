@@ -98,24 +98,25 @@ class Fix(object):
                 except:
                     errors += 1
 
-            log.write (
-                Logger.logify (
-                    "Sighting errors:\t" + str(errors)
-                )
+            approximate = Coordinate (
+                assumedCoordinates.lat
+                + sum([(i.adjustment.distance()
+                * math.cos(math.radians(i
+                .adjustment.azimuth().getDegrees())))
+                for i in arr]) / 60.0,
+                assumedCoordinates.lon
+                + sum([(i.adjustment.distance()
+                * math.sin(math.radians(i
+                .adjustment.azimuth().getDegrees())))
+                for i in arr]) / 60.0
             )
 
-        approximate = Coordinate (
-            assumedCoordinates.lat
-            + sum([(i.adjustment.distance()
-            * math.cos(math.radians(i
-            .adjustment.azimuth().getDegrees())))
-            for i in arr]) / 60.0,
-            assumedCoordinates.lon
-            + sum([(i.adjustment.distance()
-            * math.sin(math.radians(i
-            .adjustment.azimuth().getDegrees())))
-            for i in arr]) / 60.0
-        )
+            log.write(Logger.logify(
+                "Sighting errors:\t" + str(errors))
+                + Logger.logify('Approximate latitude:\t'
+                + approximate.latStr()
+                + '\tApproximate longitude:\t'
+                + approximate.lonStr()))
 
         return (approximate.latStr(), approximate.lonStr())
 
