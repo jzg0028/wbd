@@ -43,10 +43,18 @@ class SightingTest(unittest.TestCase):
         self.assertAlmostEqual(-0.5538,
             arr[0].adjustment.intermediateDistance(), 4)
 
+        self.assertAlmostEqual(-33.6304,
+            arr[0].adjustment.correctedAltitude(), 4)
+
         self.assertEqual('15d1.5',
             arr[0].adjustment.altitude().getString())
 
         self.assertEqual(-2919, arr[0].adjustment.distance())
+
+        self.assertAlmostEqual(0.729178,
+            arr[0].adjustment.azimuthNumerator(), 4)
+        self.assertAlmostEqual(0.735223,
+            arr[0].adjustment.azimuthDenominator(), 4)
 
         self.assertEqual (
             "Pollux\t2017-04-14\t23:50:14\t15d1.5\t27d59.5\t" \
