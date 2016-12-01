@@ -86,7 +86,7 @@ class Adjustment(object):
         return (math.cos(rAssLat) * math.cos(rCorAlt))
 
     def azimuth(self):
-        return Angle(math.acos(self.intermediateAzimuth()))
+        return Angle(math.degrees(math.acos(self.intermediateAzimuth())))
 
 class Sighting(object):
     def __init__(self, node, starFile,
